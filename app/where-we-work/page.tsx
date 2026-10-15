@@ -1,0 +1,93 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
+import { regionsData } from "@/data/regions";
+import { MapPin, Globe2, ArrowRight, Users, CheckCircle2 } from "lucide-react";
+
+export default function WhereWeWorkIndexPage() {
+  const { language, t } = useLanguage();
+
+  return (
+    <div className="py-12 sm:py-20 space-y-16">
+      {/* Hero Header */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
+        <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
+          <Globe2 className="w-4 h-4" />
+          <span>الانتشار الجغرافي الميداني</span>
+        </div>
+        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+          أين نعمل في الميدان
+        </h1>
+        <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
+          نصل إلى المجتمعات الأكثر هشاشة في مناطق الأزمات والنزاعات والكوارث الطبيعية عبر فرقنا الميدانية وشبكة شركائنا المعتمدة
+        </p>
+      </section>
+
+      {/* Regions Interactive Cards */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {regionsData.map((reg) => (
+            <div
+              key={reg.id}
+              className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+            >
+              <div>
+                <div className="relative h-52 w-full overflow-hidden">
+                  <img
+                    src={reg.coverImage}
+                    alt={reg.name.ar}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 start-4 flex items-center gap-2 text-white">
+                    <span className="text-3xl">{reg.flag}</span>
+                    <h3 className="font-extrabold text-xl text-white">
+                      {reg.name[language] || reg.name.ar}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="p-6 space-y-4">
+                  <p className="text-xs font-semibold text-primary-600">
+                    {reg.headline[language] || reg.headline.ar}
+                  </p>
+                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
+                    {reg.overview[language] || reg.overview.ar}
+                  </p>
+
+                  <div className="pt-2 grid grid-cols-2 gap-3 border-t border-slate-100 text-xs">
+                    <div>
+                      <span className="text-slate-400 block text-[11px]">المستفيدون</span>
+                      <strong className="text-slate-800 font-bold">
+                        +{reg.beneficiariesCount.toLocaleString()}
+                      </strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[11px]">المشاريع النشطة</span>
+                      <strong className="text-primary-600 font-bold">
+                        {reg.activeProjectsCount} مشاريع
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 pt-0">
+                <Link
+                  href={`/where-we-work/${reg.slug}`}
+                  className="w-full py-3 px-4 rounded-xl bg-slate-50 hover:bg-primary-50 text-slate-700 hover:text-primary-700 font-bold text-xs transition border border-slate-200/80 flex items-center justify-center gap-2 text-center"
+                >
+                  <span>استعراض مشاريع وتدخلات {reg.name[language] || reg.name.ar}</span>
+                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
