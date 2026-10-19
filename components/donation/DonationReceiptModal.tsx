@@ -41,8 +41,8 @@ export function DonationReceiptModal() {
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <div className="text-xs text-slate-500 font-medium">TAVASUL DERNEĞİ</div>
-              <div className="text-sm font-bold text-slate-800">جمعية تواصل للإغاثة والتنمية</div>
-              <div className="text-[11px] text-primary-600 font-semibold">ترخيص تركي: 34-292-049</div>
+              <div className="text-sm font-bold text-slate-800">{t("brandName")}</div>
+              <div className="text-[11px] text-primary-600 font-semibold">{t("turkishLicenseShort")}</div>
             </div>
             <div className="text-end">
               <span className="text-[11px] text-slate-400 block">{t("receiptNumber")}</span>
@@ -54,35 +54,35 @@ export function DonationReceiptModal() {
 
           {/* Amount Box */}
           <div className="bg-sky-50 rounded-2xl p-4 text-center border border-sky-100">
-            <span className="text-xs text-slate-500 font-medium block mb-1">المبلغ المتبرع به</span>
+            <span className="text-xs text-slate-500 font-medium block mb-1">{t("receiptAmount")}</span>
             <div className="text-3xl font-extrabold text-primary-600">
               {activeReceipt.amount.toLocaleString()} {activeReceipt.currency}
             </div>
             <span className="text-[11px] text-slate-400 mt-1 block">
-              يعادل تقريباً ~ ${Math.round(activeReceipt.amountUSD)} USD
+              {t("approximateUsd")} ~ ${Math.round(activeReceipt.amountUSD)} USD
             </span>
           </div>
 
           {/* Details Table */}
           <div className="space-y-2 text-xs text-slate-600">
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">اسم المتبرع:</span>
+              <span className="text-slate-400">{t("donorNameLabel")}:</span>
               <span className="font-semibold text-slate-800">{activeReceipt.donorName}</span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">المشروع / الغاية:</span>
+              <span className="text-slate-400">{t("purposeLabel")}:</span>
               <span className="font-semibold text-slate-800 max-w-[240px] truncate text-end">
-                {activeReceipt.projectTitle || "صندوق التبرع العام"}
+                {activeReceipt.projectTitle || t("generalDonationFund")}
               </span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">وسيلة الدفع:</span>
+              <span className="text-slate-400">{t("paymentMethodLabel")}:</span>
               <span className="font-semibold text-slate-800">
-                {activeReceipt.paymentMethod === "card" ? "بطاقة دفع إلكترونية" : "تحويل بنكي مباشر"}
+                {activeReceipt.paymentMethod === "card" ? t("electronicCard") : t("directBankTransfer")}
               </span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">تاريخ وساعة الإيداع:</span>
+              <span className="text-slate-400">{t("depositDate")}:</span>
               <span className="font-semibold text-slate-800">
                 {new Date().toLocaleDateString(language === "ar" ? "ar-EG" : "en-US", {
                   year: "numeric",
@@ -98,7 +98,7 @@ export function DonationReceiptModal() {
           {/* Security Seal */}
           <div className="flex items-center gap-2 text-[11px] text-emerald-700 bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
             <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-600" />
-            <span>هذا الإيصال إلكتروني موثق وصادر مباشرة من النظام المالي لجمعية تواصل للإغاثة والتنمية.</span>
+            <span>{t("verifiedReceiptNote")}</span>
           </div>
 
           {/* Action Buttons */}
@@ -108,7 +108,7 @@ export function DonationReceiptModal() {
               className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition shadow-sm"
             >
               <Printer className="w-4 h-4" />
-              <span>طباعة الإيصال</span>
+              <span>{t("printReceipt")}</span>
             </button>
             <button
               onClick={handlePrint}

@@ -32,6 +32,11 @@ export default function SingleProjectPage() {
     currencySymbol,
     convertUSDToCurrency,
   } = useDonation();
+  const copy = {
+    ar: ["تم نسخ رابط المشروع بنجاح لمشاركته!", "مشاركة المشروع", "الفئات المستهدفة", "تفاصيل وسياق المشروع", "سجل التحديثات الميدانية", "توثيق مستمر لفرقنا في الميدان", "تم تحصيله", "متبرع", "المستفيدون المستهدفون", "إنسان", "اختر قيمة مساهمتك", "دفع آمن 100% وإيصال إلكتروني فوري", "جميع التبرعات موجهة حصراً للمشروع المحدد تحت إشراف رسمي."],
+    tr: ["Proje bağlantısı paylaşım için kopyalandı!", "Projeyi paylaş", "Hedef gruplar", "Projenin ayrıntıları ve bağlamı", "Saha güncellemeleri", "Saha ekiplerimizden sürekli belgeleme", "toplandı", "bağışçı", "Hedeflenen faydalanıcılar", "kişi", "Katkı tutarınızı seçin", "%100 güvenli ödeme ve anında elektronik makbuz", "Tüm bağışlar resmi gözetim altında yalnızca seçilen projeye yönlendirilir."],
+    en: ["Project link copied for sharing!", "Share project", "Target groups", "Project details and context", "Field updates", "Ongoing documentation from our field teams", "raised", "donors", "Target beneficiaries", "people", "Choose your contribution", "100% secure payment with an instant digital receipt", "All donations are allocated exclusively to the selected project under official supervision."],
+  }[language];
 
   const project = getProjectBySlug(slug);
   if (!project) {
@@ -50,7 +55,7 @@ export default function SingleProjectPage() {
   const handleShare = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(window.location.href);
-      alert("تم نسخ رابط المشروع بنجاح لمشاركته!");
+      alert(copy[0]);
     }
   };
 
@@ -58,9 +63,9 @@ export default function SingleProjectPage() {
     <div className="py-10 space-y-12 pb-24">
       {/* Breadcrumb Navigation */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 text-xs font-semibold text-slate-500 flex items-center gap-2">
-        <Link href="/" className="hover:text-primary-600">الرئيسية</Link>
+        <Link href="/" className="hover:text-primary-600">{t("navHome")}</Link>
         <span>/</span>
-        <Link href="/projects" className="hover:text-primary-600">المشاريع</Link>
+        <Link href="/projects" className="hover:text-primary-600">{t("navProjects")}</Link>
         <span>/</span>
         <span className="text-slate-900 truncate max-w-sm">{title}</span>
       </div>
@@ -103,7 +108,7 @@ export default function SingleProjectPage() {
                 <button
                   onClick={handleShare}
                   className="p-2.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white transition"
-                  title="مشاركة المشروع"
+                  title={copy[1]}
                 >
                   <Share2 className="w-4 h-4" />
                 </button>
@@ -121,7 +126,7 @@ export default function SingleProjectPage() {
 
               {/* Target Groups Pills */}
               <div className="flex flex-wrap items-center gap-2 pt-2">
-                <span className="text-xs font-bold text-slate-400">الفئات المستهدفة:</span>
+                <span className="text-xs font-bold text-slate-400">{copy[2]}:</span>
                 {project.targetGroups.map((g, i) => (
                   <span
                     key={i}
@@ -135,7 +140,7 @@ export default function SingleProjectPage() {
 
             {/* Detailed Description */}
             <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-              <h2 className="text-xl font-bold text-slate-900">تفاصيل وسياق المشروع</h2>
+              <h2 className="text-xl font-bold text-slate-900">{copy[3]}</h2>
               <div className="prose prose-slate max-w-none text-sm text-slate-700 leading-loose text-justify space-y-4">
                 <p>{description}</p>
               </div>
@@ -147,10 +152,10 @@ export default function SingleProjectPage() {
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-primary-600" />
-                    <h3 className="text-lg font-bold text-slate-900">سجل التحديثات الميدانية</h3>
+                    <h3 className="text-lg font-bold text-slate-900">{copy[4]}</h3>
                   </div>
                   <span className="text-xs font-semibold text-slate-400">
-                    توثيق مستمر لفرقنا في الميدان
+                    {copy[5]}
                   </span>
                 </div>
 
@@ -204,26 +209,26 @@ export default function SingleProjectPage() {
                 </div>
 
                 <div className="flex items-center justify-between text-xs text-slate-500 pt-1 font-semibold">
-                  <span className="text-slate-800">{percent}% تم تحصيله</span>
+                  <span className="text-slate-800">{percent}% {copy[6]}</span>
                   <span className="flex items-center gap-1">
                     <Users className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{project.donorsCount} متبرع</span>
+                    <span>{project.donorsCount} {copy[7]}</span>
                   </span>
                 </div>
               </div>
 
               {/* Beneficiaries Count Card */}
               <div className="bg-sky-50 rounded-2xl p-4 flex items-center justify-between border border-sky-100 text-xs">
-                <span className="font-semibold text-slate-700">المستفيدون المستهدفون:</span>
+                <span className="font-semibold text-slate-700">{copy[8]}:</span>
                 <strong className="text-primary-700 font-black text-sm">
-                  +{project.beneficiariesCount.toLocaleString()} إنسان
+                  +{project.beneficiariesCount.toLocaleString()} {copy[9]}
                 </strong>
               </div>
 
               {/* Fast Donation Amount Selection */}
               <div className="space-y-3 pt-2 border-t border-slate-100">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-700">اختر قيمة مساهمتك:</span>
+                  <span className="text-xs font-bold text-slate-700">{copy[10]}:</span>
                   <div className="flex items-center gap-1 text-[11px] font-bold">
                     {(["USD", "TRY", "EUR", "SAR"] as const).map((curr) => (
                       <button
@@ -268,7 +273,7 @@ export default function SingleProjectPage() {
                 >
                   <Heart className="w-4 h-4 fill-white" />
                   <span>
-                    تبرع الآن بمبلغ {convertUSDToCurrency(donationInput).toLocaleString()} {currencySymbol}
+                    {t("donateAmountPrefix")} {convertUSDToCurrency(donationInput).toLocaleString()} {currencySymbol}
                   </span>
                 </button>
               </div>
@@ -277,9 +282,9 @@ export default function SingleProjectPage() {
               <div className="text-[11px] text-slate-500 text-center space-y-1">
                 <div className="flex items-center justify-center gap-1 text-emerald-600 font-semibold">
                   <ShieldCheck className="w-4 h-4" />
-                  <span>دفع آمن 100% وإيصال إلكتروني فوري</span>
+                  <span>{copy[11]}</span>
                 </div>
-                <p>جميع التبرعات موجهة حصراً للمشروع المحدد تحت إشراف رسمي.</p>
+                <p>{copy[12]}</p>
               </div>
             </div>
           </div>

@@ -18,6 +18,11 @@ import {
 
 export default function SectorsIndexPage() {
   const { language, t } = useLanguage();
+  const copy = {
+    ar: ["القطاعات الاستراتيجية السبعة", "مجالات عمل جمعية تواصل", "تدخلات متكاملة تصنع فارقاً جوهرياً، تبدأ من الإغاثة الفورية في أوقات الطوارئ، وتصل إلى التمكين المستدام صوناً لكرامة الإنسان", "المستفيدون", "المشاريع المنجزة", "استعرض صفحة القطاع والمشاريع التابعة"],
+    tr: ["Yedi stratejik çalışma alanı", "Tawasul'un çalışma alanları", "Acil yardımdan insan onurunu koruyan sürdürülebilir güçlenmeye uzanan bütüncül müdahaleler", "Faydalanıcılar", "Tamamlanan projeler", "Alanı ve ilgili projeleri incele"],
+    en: ["Seven strategic sectors", "Tawasul's areas of work", "Integrated interventions ranging from immediate emergency relief to sustainable empowerment that protects human dignity", "Beneficiaries", "Completed projects", "View this sector and its projects"],
+  }[language];
 
   const getSectorIcon = (slug: string) => {
     switch (slug) {
@@ -46,13 +51,13 @@ export default function SectorsIndexPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
           <Layers className="w-4 h-4" />
-          <span>القطاعات الاستراتيجية السبعة</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-          مجالات عمل جمعية تواصل
+          {copy[1]}
         </h1>
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          تدخلات متكاملة تصنع فارقاً جوهرياً، تبدأ من الإغاثة الفورية في أوقات الطوارئ، وتصل إلى التمكين المستدام صوناً لكرامة الإنسان
+          {copy[2]}
         </p>
       </section>
 
@@ -92,15 +97,15 @@ export default function SectorsIndexPage() {
 
                   <div className="pt-2 grid grid-cols-2 gap-3 border-t border-slate-100 text-xs">
                     <div>
-                      <span className="text-slate-400 block text-[11px]">المستفيدون</span>
+                      <span className="text-slate-400 block text-[11px]">{copy[3]}</span>
                       <strong className="text-slate-800 font-bold">
                         +{sec.stats.beneficiariesCount.toLocaleString()}
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-400 block text-[11px]">المشاريع المنجزة</span>
+                      <span className="text-slate-400 block text-[11px]">{copy[4]}</span>
                       <strong className="text-emerald-600 font-bold">
-                        {sec.stats.completedProjects} مشروع
+                        {sec.stats.completedProjects} {t("project")}
                       </strong>
                     </div>
                   </div>
@@ -112,7 +117,7 @@ export default function SectorsIndexPage() {
                   href={`/sectors/${sec.slug}`}
                   className="w-full py-3 px-4 rounded-xl bg-slate-50 hover:bg-primary-50 text-slate-700 hover:text-primary-700 font-bold text-xs transition border border-slate-200/80 flex items-center justify-center gap-2 text-center"
                 >
-                  <span>استعرض صفحة القطاع والمشاريع التابعة</span>
+                  <span>{copy[5]}</span>
                   <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                 </Link>
               </div>

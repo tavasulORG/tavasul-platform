@@ -7,9 +7,14 @@ import { aboutData } from "@/data/about";
 import { Eye, Send, ArrowRight, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
 
 export default function VisionMissionPage() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const vision = aboutData.vision[language] || aboutData.vision.ar;
   const mission = aboutData.mission[language] || aboutData.mission.ar;
+  const copy = {
+    ar: ["البوصلة الاستراتيجية لجمعية تواصل", "رؤيتنا ورسالتنا", "المبادئ التوجيهية والغايات الكبرى التي تقود كافة تدخلاتنا ومشاريعنا الإنسانية", "رؤيتنا الاستراتيجية", "رسالتنا الإنسانية", "مرتكزات تحقيق الرؤية والرسالة", "السرعة في الاستجابة الطارئة", "الاستدامة في التمكين التنموي", "الشفافية والحوكمة الصارمة", "استعرض أهدافنا وقيمنا الست المؤسسية"],
+    tr: ["Tawasul'un stratejik pusulası", "Vizyonumuz ve misyonumuz", "Tüm insani müdahale ve projelerimize yön veren ilkeler ve temel amaçlar", "Stratejik vizyonumuz", "İnsani misyonumuz", "Vizyon ve misyonun dayanakları", "Acil durumlarda hızlı müdahale", "Kalkınma ve güçlenmede sürdürülebilirlik", "Şeffaflık ve güçlü yönetişim", "Kurumsal hedef ve değerlerimizi inceleyin"],
+    en: ["Tawasul's strategic compass", "Our vision and mission", "The guiding principles and major goals behind every humanitarian intervention and project", "Our strategic vision", "Our humanitarian mission", "Foundations of our vision and mission", "Speed in emergency response", "Sustainability in development and empowerment", "Transparency and rigorous governance", "Explore our institutional goals and core values"],
+  }[language];
 
   return (
     <div className="py-12 sm:py-20 space-y-16">
@@ -17,13 +22,13 @@ export default function VisionMissionPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
           <Sparkles className="w-4 h-4" />
-          <span>البوصلة الاستراتيجية لجمعية تواصل</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-          رؤيتنا ورسالتنا
+          {copy[1]}
         </h1>
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          المبادئ التوجيهية والغايات الكبرى التي تقود كافة تدخلاتنا ومشاريعنا الإنسانية
+          {copy[2]}
         </p>
       </section>
 
@@ -38,7 +43,7 @@ export default function VisionMissionPage() {
               <Eye className="w-8 h-8" />
             </div>
             <span className="text-xs font-bold tracking-widest uppercase text-sky-200 block">
-              رؤيتنا الاستراتيجية (Our Vision)
+              {copy[3]}
             </span>
             <blockquote className="text-xl sm:text-2xl font-black leading-snug">
               &quot;{vision}&quot;
@@ -46,7 +51,7 @@ export default function VisionMissionPage() {
           </div>
 
           <p className="text-xs text-sky-100 leading-relaxed pt-4 border-t border-white/20 relative z-10">
-            نسعى لأن نكون النموذج المرجعي الأول في تحويل العمل الخيري من مجرد إغاثة آنية إلى تمكين متكامل ينقل الأفراد والمجتمعات من الحاجة إلى الاكتفاء الذاتي والكرامة المستدامة.
+            {vision}
           </p>
         </div>
 
@@ -57,7 +62,7 @@ export default function VisionMissionPage() {
               <Send className="w-8 h-8" />
             </div>
             <span className="text-xs font-bold tracking-widest uppercase text-primary-600 block">
-              رسالتنا الإنسانية (Our Mission)
+              {copy[4]}
             </span>
             <blockquote className="text-xl sm:text-2xl font-black leading-snug text-slate-900">
               &quot;{mission}&quot;
@@ -65,7 +70,7 @@ export default function VisionMissionPage() {
           </div>
 
           <p className="text-xs text-slate-600 leading-relaxed pt-4 border-t border-slate-100">
-            الالتزام بالاستجابة الاحترافية السريعة للكوارث والحروب، مع بناء القدرات المحلية عبر شراكات موثوقة تضمن وصول المساعدات لمستحقيها بأقصى درجات النزاهة والامتثال.
+            {mission}
           </p>
         </div>
       </section>
@@ -74,20 +79,20 @@ export default function VisionMissionPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8">
         <div className="bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-200/80 space-y-4">
           <h3 className="font-extrabold text-slate-900 text-base text-center">
-            مرتكزات تحقيق الرؤية والرسالة
+            {copy[5]}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white p-3 rounded-xl border border-slate-200/60 shadow-sm">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>السرعة في الاستجابة الطارئة</span>
+              <span>{copy[6]}</span>
             </div>
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white p-3 rounded-xl border border-slate-200/60 shadow-sm">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>الاستدامة في التمكين التنموي</span>
+              <span>{copy[7]}</span>
             </div>
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white p-3 rounded-xl border border-slate-200/60 shadow-sm">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>الشفافية والحوكمة الصارمة</span>
+              <span>{copy[8]}</span>
             </div>
           </div>
         </div>
@@ -99,7 +104,7 @@ export default function VisionMissionPage() {
           href="/goals-values"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-md transition"
         >
-          <span>استعرض أهدافنا وقيمنا الست المؤسسية</span>
+          <span>{copy[9]}</span>
           <ArrowRight className="w-4 h-4 rtl:rotate-180" />
         </Link>
       </section>

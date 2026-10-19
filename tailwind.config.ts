@@ -34,8 +34,31 @@ export default {
         },
       },
       fontFamily: {
-        arabic: ["Cairo", "Tajawal", "system-ui", "sans-serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: [
+          "Bahij TheSansArabic",
+          "Noto Kufi Arabic",
+          "Alexandria",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "sans-serif",
+        ],
+        brand: [
+          "BigVesta Arabic Beta",
+          "Bahij TheSansArabic",
+          "Noto Kufi Arabic",
+          "Alexandria",
+          "system-ui",
+          "sans-serif",
+        ],
+        latin: ["Trajan Sans Pro", "Cinzel", "Palatino Linotype", "Georgia", "serif"],
+        arabic: [
+          "Bahij TheSansArabic",
+          "Noto Kufi Arabic",
+          "Alexandria",
+          "system-ui",
+          "sans-serif",
+        ],
       },
       borderRadius: {
         xl: "1rem",

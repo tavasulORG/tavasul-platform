@@ -11,6 +11,11 @@ import { Search, Filter, Layers, MapPin, Heart } from "lucide-react";
 export default function AllProjectsPage() {
   const { language, t } = useLanguage();
   const { projects } = useDonation();
+  const copy = {
+    ar: ["مشاريع الأثر الميداني", "دليل المشاريع والحملات الإنسانية", "اختر المشروع الذي يلامس قلبك، وساهم في إنقاذ الأرواح وبناء الاستقرار لملايين المحتاجين", "جميع القطاعات", "جميع الدول والمناطق", "جميع الحالات", "عاجل جداً 🔥", "مشاريع جارية ⏳", "مشاريع مكتملة ✅", "تم العثور على", "لم يتم العثور على مشاريع مطابقة لبحثك.", "إعادة ضبط الفلاتر"],
+    tr: ["Sahada etki yaratan projeler", "İnsani yardım proje ve kampanyaları", "Size dokunan projeyi seçin; hayat kurtarmaya ve milyonlarca ihtiyaç sahibinin istikrarına katkıda bulunun", "Tüm alanlar", "Tüm ülkeler ve bölgeler", "Tüm durumlar", "Çok acil 🔥", "Devam eden projeler ⏳", "Tamamlanan projeler ✅", "Bulunan proje sayısı:", "Aramanızla eşleşen proje bulunamadı.", "Filtreleri sıfırla"],
+    en: ["Field-impact projects", "Humanitarian projects and campaigns", "Choose the cause that speaks to you and help save lives and build stability for millions in need", "All sectors", "All countries and regions", "All statuses", "Urgent 🔥", "Active projects ⏳", "Completed projects ✅", "Projects found:", "No projects matched your search.", "Reset filters"],
+  }[language];
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSector, setSelectedSector] = useState<string>("all");
@@ -40,13 +45,13 @@ export default function AllProjectsPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
           <Heart className="w-4 h-4 fill-primary-600" />
-          <span>مشاريع الأثر الميداني</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-          دليل المشاريع والحملات الإنسانية
+          {copy[1]}
         </h1>
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          اختر المشروع الذي يلامس قلبك، وساهم في إنقاذ الأرواح وبناء الاستقرار لملايين المحتاجين
+          {copy[2]}
         </p>
       </section>
 
@@ -73,7 +78,7 @@ export default function AllProjectsPage() {
                 onChange={(e) => setSelectedSector(e.target.value)}
                 className="w-full py-2.5 px-3 rounded-2xl border border-slate-200 text-xs font-medium text-slate-700 bg-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
               >
-                <option value="all">جميع القطاعات ({t("all")})</option>
+                <option value="all">{copy[3]} ({t("all")})</option>
                 {sectorsData.map((sec) => (
                   <option key={sec.id} value={sec.slug}>
                     {sec.title[language] || sec.title.ar}
@@ -89,7 +94,7 @@ export default function AllProjectsPage() {
                 onChange={(e) => setSelectedCountry(e.target.value)}
                 className="w-full py-2.5 px-3 rounded-2xl border border-slate-200 text-xs font-medium text-slate-700 bg-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
               >
-                <option value="all">جميع الدول والمناطق</option>
+                <option value="all">{copy[4]}</option>
                 {regionsData.map((reg) => (
                   <option key={reg.id} value={reg.slug}>
                     {reg.flag} {reg.name[language] || reg.name.ar}
@@ -105,10 +110,10 @@ export default function AllProjectsPage() {
                 onChange={(e) => setSelectedStatus(e.target.value)}
                 className="w-full py-2.5 px-3 rounded-2xl border border-slate-200 text-xs font-medium text-slate-700 bg-white focus:ring-2 focus:ring-primary-500 focus:outline-none"
               >
-                <option value="all">جميع الحالات</option>
-                <option value="urgent">عاجل جداً 🔥</option>
-                <option value="active">مشاريع جارية ⏳</option>
-                <option value="completed">مشاريع مكتملة ✅</option>
+                <option value="all">{copy[5]}</option>
+                <option value="urgent">{copy[6]}</option>
+                <option value="active">{copy[7]}</option>
+                <option value="completed">{copy[8]}</option>
               </select>
             </div>
           </div>
@@ -119,7 +124,7 @@ export default function AllProjectsPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="flex items-center justify-between pb-6">
           <span className="text-xs font-bold text-slate-500">
-            تم العثور على <strong className="text-slate-900">{filteredProjects.length}</strong> مشروع
+            {copy[9]} <strong className="text-slate-900">{filteredProjects.length}</strong> {t("project")}
           </span>
         </div>
 
@@ -132,7 +137,7 @@ export default function AllProjectsPage() {
         ) : (
           <div className="bg-white rounded-3xl p-16 border border-slate-100 text-center space-y-3">
             <p className="text-slate-500 text-sm font-medium">
-              لم يتم العثور على مشاريع مطابقة لبحثك.
+              {copy[10]}
             </p>
             <button
               onClick={() => {
@@ -143,7 +148,7 @@ export default function AllProjectsPage() {
               }}
               className="text-xs font-bold text-primary-600 hover:underline"
             >
-              إعادة ضبط الفلاتر
+              {copy[11]}
             </button>
           </div>
         )}

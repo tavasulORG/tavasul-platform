@@ -17,6 +17,11 @@ import {
 
 export default function DonatePage() {
   const { language, t } = useLanguage();
+  const copy = {
+    ar: ["بوابة العطاء الإلكتروني الموحدة", "التبرع الإلكتروني الآمن", "وجّه تبرعك لأحد برامجنا الحيوية بضغطة زر واحدة واحصل على إيصال رسمي معتمد", "1. العملة وتوجيه التبرع", "اختر الغاية أو المشروع", "صندوق الإغاثة العامة والطارئة (حيث تشتد الحاجة)", "2. تحديد مبلغ المساهمة", "العودة للخيارات المحددة", "إدخال مبلغ آخر مخصص...", "متابعة التبرع الآمن بمبلغ", "عملية مشفرة ببروتوكول SSL وإيصال فوري رسمي"],
+    tr: ["Birleşik çevrimiçi bağış portalı", "Güvenli çevrimiçi bağış", "Bağışınızı tek tıkla programlarımızdan birine yönlendirin ve resmi makbuzunuzu alın", "1. Para birimi ve bağış amacı", "Amaç veya proje seçin", "Genel ve acil yardım fonu (en çok ihtiyaç duyulan alan)", "2. Katkı tutarını belirleyin", "Hazır seçeneklere dön", "Özel bir tutar girin...", "Güvenli bağışa devam et:", "SSL ile şifrelenmiş işlem ve anında resmi makbuz"],
+    en: ["Unified online giving portal", "Secure online donation", "Direct your gift to one of our vital programs in one click and receive an official receipt", "1. Currency and donation designation", "Choose a purpose or project", "General and emergency relief fund (where most needed)", "2. Choose your contribution amount", "Return to preset amounts", "Enter a custom amount...", "Continue securely with", "SSL-encrypted transaction and instant official receipt"],
+  }[language];
   const {
     openQuickDonate,
     currency,
@@ -43,13 +48,13 @@ export default function DonatePage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
           <Heart className="w-4 h-4 fill-primary-600" />
-          <span>بوابة العطاء الإلكتروني الموحدة</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-          التبرع الإلكتروني الآمن
+          {copy[1]}
         </h1>
         <p className="text-base text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          وجّه تبرعك لأحد برامجنا الحيوية بضغطة زر واحدة واحصل على إيصال رسمي معتمد
+          {copy[2]}
         </p>
       </section>
 
@@ -59,7 +64,7 @@ export default function DonatePage() {
           {/* Step 1: Currency & Fund */}
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <span className="text-sm font-bold text-slate-800">1. العملة وتوجيه التبرع</span>
+              <span className="text-sm font-bold text-slate-800">{copy[3]}</span>
               <div className="flex gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
                 {(["USD", "TRY", "EUR", "SAR"] as Currency[]).map((c) => (
                   <button
@@ -77,13 +82,13 @@ export default function DonatePage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-600 block">اختر الغاية أو المشروع:</label>
+              <label className="text-xs font-bold text-slate-600 block">{copy[4]}:</label>
               <select
                 value={selectedFund}
                 onChange={(e) => setSelectedFund(e.target.value)}
                 className="w-full py-3 px-4 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-primary-500 focus:outline-none bg-slate-50"
               >
-                <option value="">صندوق الإغاثة العامة والطارئة (حيث تشتد الحاجة)</option>
+                <option value="">{copy[5]}</option>
                 {projects.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.title[language] || p.title.ar}
@@ -96,7 +101,7 @@ export default function DonatePage() {
           {/* Step 2: Amount */}
           <div className="space-y-4">
             <span className="text-sm font-bold text-slate-800 block pb-3 border-b border-slate-100">
-              2. تحديد مبلغ المساهمة
+              {copy[6]}
             </span>
 
             <div className="grid grid-cols-4 gap-3">
@@ -131,7 +136,7 @@ export default function DonatePage() {
                 onClick={() => setIsCustom(!isCustom)}
                 className="text-xs font-bold text-primary-600 hover:underline"
               >
-                {isCustom ? "العودة للخيارات المحددة" : "إدخال مبلغ آخر مخصص..."}
+                {isCustom ? copy[7] : copy[8]}
               </button>
 
               {isCustom && (
@@ -139,7 +144,7 @@ export default function DonatePage() {
                   <input
                     type="number"
                     min="1"
-                    placeholder="أدخل المبلغ..."
+                    placeholder={t("enterAmount")}
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
                     className="w-full py-3 px-4 rounded-2xl border border-primary-300 font-black text-slate-900 text-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -162,13 +167,13 @@ export default function DonatePage() {
             >
               <Lock className="w-5 h-5" />
               <span>
-                متابعة التبرع الآمن بمبلغ {finalAmount.toLocaleString()} {currencySymbol}
+                {copy[9]} {finalAmount.toLocaleString()} {currencySymbol}
               </span>
             </button>
 
             <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>عملية مشفرة ببروتوكول SSL وإيصال فوري رسمي</span>
+              <span>{copy[10]}</span>
             </div>
           </div>
         </div>

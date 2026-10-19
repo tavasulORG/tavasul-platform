@@ -93,7 +93,7 @@ export function QuickDonateDrawer() {
     setIsLoading(true);
     try {
       await submitDonation({
-        donorName: donorName || (language === "ar" ? "فاعل خير" : "Generous Donor"),
+        donorName: donorName || t("anonymous"),
         donorEmail: donorEmail || "donor@tawasul-tr.org",
         donorPhone,
         isAnonymous,
@@ -121,7 +121,7 @@ export function QuickDonateDrawer() {
             </div>
             <div>
               <h2 className="text-base font-bold text-slate-900">{t("quickDonateTitle")}</h2>
-              <p className="text-xs text-slate-500">تواصل للإغاثة والتنمية (ترخيص: 34-292-049)</p>
+              <p className="text-xs text-slate-500">{t("turkishLicenseShort")}</p>
             </div>
           </div>
           <button
@@ -136,7 +136,7 @@ export function QuickDonateDrawer() {
         <form onSubmit={handleSubmit} className="p-5 space-y-6 flex-1">
           {/* Currency Switcher */}
           <div className="flex items-center justify-between bg-slate-50 p-2 rounded-2xl border border-slate-200/70">
-            <span className="text-xs font-semibold text-slate-600 px-2">عملة التبرع:</span>
+            <span className="text-xs font-semibold text-slate-600 px-2">{t("donationCurrency")}:</span>
             <div className="flex gap-1">
               {(["USD", "TRY", "EUR", "SAR"] as Currency[]).map((curr) => (
                 <button
@@ -228,7 +228,7 @@ export function QuickDonateDrawer() {
                   <input
                     type="number"
                     min="1"
-                    placeholder="أدخل المبلغ..."
+                    placeholder={t("enterAmount")}
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
                     className="w-full py-3 px-4 rounded-2xl border border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 font-bold text-slate-800 text-lg"
@@ -293,7 +293,7 @@ export function QuickDonateDrawer() {
               <div className="space-y-3 bg-slate-50/70 p-4 rounded-2xl border border-slate-200/60">
                 <div>
                   <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                    رقم البطاقة (Visa / MasterCard)
+                    {t("cardNumber")}
                   </label>
                   <input
                     type="text"
@@ -306,7 +306,7 @@ export function QuickDonateDrawer() {
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                      تاريخ الصلاحية
+                      {t("expiryDate")}
                     </label>
                     <input
                       type="text"
@@ -366,7 +366,7 @@ export function QuickDonateDrawer() {
                     </div>
                   ))}
                 <p className="text-[11px] text-slate-500 text-center">
-                  يرجى كتابة رقم المشروع أو الغاية في بيان الحوالة البنكية.
+                  {t("bankTransferNote")}
                 </p>
               </div>
             )}
@@ -419,7 +419,7 @@ export function QuickDonateDrawer() {
           {/* Security Note */}
           <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>بياناتكم مشفرة ومحمية وفق أعلى معايير الأمان المصرفي الدولية (256-bit SSL).</span>
+            <span>{t("dataSecurityNote")}</span>
           </div>
 
           {/* Submit CTA */}
@@ -434,7 +434,7 @@ export function QuickDonateDrawer() {
               <>
                 <Heart className="w-4 h-4 fill-white" />
                 <span>
-                  تبرع بمبلغ {currentAmountInCurrency.toLocaleString()} {currencySymbol}
+                  {t("donateAmountPrefix")} {currentAmountInCurrency.toLocaleString()} {currencySymbol}
                 </span>
               </>
             )}

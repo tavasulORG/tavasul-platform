@@ -8,6 +8,11 @@ import { ShieldCheck, FileText, Download, CheckCircle2, Award, Users, ArrowRight
 
 export default function GovernancePage() {
   const { language, t } = useLanguage();
+  const copy = {
+    ar: ["شفافية مطلقة ومساءلة مؤسسية", "الحوكمة، الشفافية، والامتثال", "نلتزم بأعلى معايير النزاهة والرقابة المالية والتدقيق القانوني المستمر", "بيانات القيد والتسجيل الرسمي", "مديرية العلاقات مع منظمات المجتمع المدني - ولاية إسطنبول", "رقم الترخيص القانوني: 34-292-049 | مسجلة بموجب القوانين التركية.", "حالة التسجيل", "نشط ومعتمد رسمياً", "مجلس الإدارة والقيادة", "كفاءات متخصصة تدير الجمعية وفق أعلى مبادئ الحوكمة والنزاهة", "التقارير المالية والسنوية", "تقارير مدققة من مكاتب محاسبة قانونية مستقلة", "حجم الملف", "عام", "سيتم بدء تنزيل التقرير المالي المعتمد بصيغة PDF", "تنزيل التقرير", "التزامنا تجاه المتبرعين والشركاء", "تخضع حسابات ومشاريع تواصل لرقابة مالية داخلية وتدقيق خارجي، ونلتزم بتزويد المانحين والشركاء بتقارير دورية موثقة."],
+    tr: ["Tam şeffaflık ve kurumsal hesap verebilirlik", "Yönetişim, şeffaflık ve uyum", "En yüksek kurumsal dürüstlük, mali gözetim ve sürekli yasal denetim standartlarına bağlıyız", "Resmi kayıt bilgileri", "İstanbul İl Sivil Toplumla İlişkiler Müdürlüğü", "Yasal sicil no: 34-292-049 | Türk mevzuatına göre kayıtlıdır.", "Kayıt durumu", "Aktif ve resmi olarak onaylı", "Yönetim kurulu ve liderlik", "Derneği en yüksek yönetişim ve dürüstlük ilkeleriyle yöneten uzman kadro", "Mali ve yıllık raporlar", "Bağımsız yetkili mali müşavirlerce denetlenmiş raporlar", "Dosya boyutu", "Yıl", "Onaylı mali rapor PDF olarak indirilecek", "Raporu indir", "Bağışçı ve ortaklarımıza taahhüdümüz", "Tawasul'un tüm hesap ve projeleri iç ve dış denetime tabidir; bağışçı ve ortaklarımıza düzenli, belgeli raporlar sunarız."],
+    en: ["Full transparency and institutional accountability", "Governance, transparency, and compliance", "We uphold the highest standards of institutional integrity, financial oversight, and continuous legal audit", "Official registration details", "Istanbul Provincial Directorate of Civil Society Relations", "Legal registration No. 34-292-049 | Registered under Turkish law.", "Registration status", "Active and officially accredited", "Board and leadership", "Specialists managing the association under the highest standards of governance and integrity", "Financial and annual reports", "Reports audited by independent licensed accountants", "File size", "Year", "The approved financial report will download as a PDF", "Download report", "Our commitment to donors and partners", "All Tawasul accounts and projects undergo internal control and external audit, with regular documented reports provided to donors and partners."],
+  }[language];
 
   return (
     <div className="py-12 sm:py-20 space-y-16">
@@ -15,13 +20,13 @@ export default function GovernancePage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3.5 py-1.5 rounded-full text-xs font-bold border border-emerald-100">
           <ShieldCheck className="w-4 h-4" />
-          <span>شفافية مطلقة ومساءلة مؤسسية</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-          الحوكمة، الشفافية، والامتثال
+          {copy[1]}
         </h1>
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          نلتزم بأعلى معايير النزاهة المؤسسية والرقابة المالية والتدقيق القانوني الرسمي المستمر
+          {copy[2]}
         </p>
       </section>
 
@@ -30,19 +35,19 @@ export default function GovernancePage() {
         <div className="bg-gradient-to-r from-sky-50 to-primary-50 rounded-3xl p-8 border border-sky-100 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2">
             <span className="text-xs font-bold text-primary-700 uppercase tracking-wider block">
-              بيانات القيد والتسجيل الرسمي
+              {copy[3]}
             </span>
             <h3 className="text-xl font-bold text-slate-900">
-              مديرية العلاقات مع منظمات المجتمع المدني - ولاية إسطنبول
+              {copy[4]}
             </h3>
             <p className="text-xs text-slate-600">
-              رقم الترخيص القانوني: <strong className="text-primary-700 font-mono text-sm">34-292-049</strong> | مسجلة بموجب القوانين واللوائح التركية الناظمة للعمل الإنساني.
+              {copy[5]}
             </p>
           </div>
           <div className="px-5 py-3 rounded-2xl bg-white shadow-sm border border-sky-100 text-center shrink-0">
-            <span className="text-[11px] text-slate-500 block">حالة التسجيل</span>
+            <span className="text-[11px] text-slate-500 block">{copy[6]}</span>
             <span className="text-xs font-bold text-emerald-600 flex items-center gap-1 justify-center mt-0.5">
-              <CheckCircle2 className="w-4 h-4" /> نشط ومعتمد رسمياً
+              <CheckCircle2 className="w-4 h-4" /> {copy[7]}
             </span>
           </div>
         </div>
@@ -55,8 +60,8 @@ export default function GovernancePage() {
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-slate-900">مجلس الإدارة والقيادة</h2>
-            <p className="text-xs text-slate-500">كفاءات متخصصة تدير الجمعية وفق أعلى مبادئ الحوكمة والنزاهة</p>
+            <h2 className="text-2xl font-black text-slate-900">{copy[8]}</h2>
+            <p className="text-xs text-slate-500">{copy[9]}</p>
           </div>
         </div>
 
@@ -85,8 +90,8 @@ export default function GovernancePage() {
             <FileText className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-slate-900">التقارير المالية والسنوية</h2>
-            <p className="text-xs text-slate-500">تقارير مدققة من مكاتب محاسبة قانونية مستقلة ومعتمدة</p>
+            <h2 className="text-2xl font-black text-slate-900">{copy[10]}</h2>
+            <p className="text-xs text-slate-500">{copy[11]}</p>
           </div>
         </div>
 
@@ -105,15 +110,15 @@ export default function GovernancePage() {
                     {language === "tr" ? report.titleTr : language === "en" ? report.titleEn : report.titleAr}
                   </h4>
                   <span className="text-[11px] text-slate-400">
-                    PDF • حجم الملف: {report.size} • عام {report.year}
+                    PDF • {copy[12]}: {report.size} • {copy[13]} {report.year}
                   </span>
                 </div>
               </div>
 
               <button
-                onClick={() => alert("سيتم بدء تنزيل ملف التقرير المالي المعتمد بصيغة PDF")}
+                onClick={() => alert(copy[14])}
                 className="p-2.5 rounded-xl bg-slate-50 hover:bg-primary-50 text-slate-600 hover:text-primary-600 border border-slate-200 transition shrink-0"
-                title="تنزيل التقرير"
+                title={copy[15]}
               >
                 <Download className="w-4 h-4" />
               </button>
@@ -125,9 +130,9 @@ export default function GovernancePage() {
       {/* Audit Commitments */}
       <section className="max-w-5xl mx-auto px-4 sm:px-8">
         <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-10 space-y-4">
-          <h3 className="text-xl font-bold">التزامنا تجاه المتبرعين والشركاء</h3>
+          <h3 className="text-xl font-bold">{copy[16]}</h3>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl">
-            تخضع جميع حسابات ومشاريع جمعية تواصل للإغاثة والتنمية لرقابة مالية داخلية صارمة وتدقيق خارجي من مراجعين قانونيين معتمدين في الجمهورية التركية. كما نلتزم بتزويد المانحين والشركاء بتقارير دورية مدعمة بالصور ومقاطع الفيديو والبيانات الإحصائية الدقيقة للمستفيدين.
+            {copy[17]}
           </p>
         </div>
       </section>

@@ -8,6 +8,11 @@ import { MapPin, Globe2, ArrowRight, Users, CheckCircle2 } from "lucide-react";
 
 export default function WhereWeWorkIndexPage() {
   const { language, t } = useLanguage();
+  const copy = {
+    ar: ["الانتشار الجغرافي الميداني", "أين نعمل في الميدان", "نصل إلى المجتمعات الأكثر هشاشة في مناطق الأزمات والنزاعات والكوارث الطبيعية عبر فرقنا الميدانية وشبكة شركائنا المعتمدة", "المستفيدون", "المشاريع النشطة", "استعراض مشاريع وتدخلات"],
+    tr: ["Sahadaki coğrafi erişim", "Sahada nerelerde çalışıyoruz", "Saha ekiplerimiz ve onaylı ortak ağımızla kriz, çatışma ve doğal afet bölgelerindeki en kırılgan topluluklara ulaşıyoruz", "Faydalanıcılar", "Aktif projeler", "Projeleri ve müdahaleleri incele:"],
+    en: ["Our geographic field presence", "Where we work in the field", "Through our field teams and accredited partners, we reach the most vulnerable communities affected by crises, conflict, and natural disasters", "Beneficiaries", "Active projects", "View projects and interventions in"],
+  }[language];
 
   return (
     <div className="py-12 sm:py-20 space-y-16">
@@ -15,13 +20,13 @@ export default function WhereWeWorkIndexPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
           <Globe2 className="w-4 h-4" />
-          <span>الانتشار الجغرافي الميداني</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-          أين نعمل في الميدان
+          {copy[1]}
         </h1>
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          نصل إلى المجتمعات الأكثر هشاشة في مناطق الأزمات والنزاعات والكوارث الطبيعية عبر فرقنا الميدانية وشبكة شركائنا المعتمدة
+          {copy[2]}
         </p>
       </section>
 
@@ -59,15 +64,15 @@ export default function WhereWeWorkIndexPage() {
 
                   <div className="pt-2 grid grid-cols-2 gap-3 border-t border-slate-100 text-xs">
                     <div>
-                      <span className="text-slate-400 block text-[11px]">المستفيدون</span>
+                      <span className="text-slate-400 block text-[11px]">{copy[3]}</span>
                       <strong className="text-slate-800 font-bold">
                         +{reg.beneficiariesCount.toLocaleString()}
                       </strong>
                     </div>
                     <div>
-                      <span className="text-slate-400 block text-[11px]">المشاريع النشطة</span>
+                      <span className="text-slate-400 block text-[11px]">{copy[4]}</span>
                       <strong className="text-primary-600 font-bold">
-                        {reg.activeProjectsCount} مشاريع
+                        {reg.activeProjectsCount} {t("projectsWord")}
                       </strong>
                     </div>
                   </div>
@@ -79,7 +84,7 @@ export default function WhereWeWorkIndexPage() {
                   href={`/where-we-work/${reg.slug}`}
                   className="w-full py-3 px-4 rounded-xl bg-slate-50 hover:bg-primary-50 text-slate-700 hover:text-primary-700 font-bold text-xs transition border border-slate-200/80 flex items-center justify-center gap-2 text-center"
                 >
-                  <span>استعراض مشاريع وتدخلات {reg.name[language] || reg.name.ar}</span>
+                  <span>{copy[5]} {reg.name[language] || reg.name.ar}</span>
                   <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                 </Link>
               </div>

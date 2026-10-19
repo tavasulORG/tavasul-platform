@@ -8,6 +8,11 @@ import { Target, Heart, Users, CheckCircle2, ShieldCheck, ArrowRight } from "luc
 
 export default function GoalsValuesPage() {
   const { language } = useLanguage();
+  const copy = {
+    ar: ["منظومة العمل المؤسسي", "أهدافنا وقيمنا والفئات المستهدفة", "المعايير الراسخة التي تحكم أداءنا وأولويات الفئات التي نسخر طاقاتنا لأجلها", "أهداف الجمعية المؤسسية", "الغايات الاستراتيجية الخمس المعتمدة", "المعايير الأخلاقية والمهنية", "قيمنا الست الراسخة", "نلتزم بهذه القيم في كل مشروع وتدخل وشراكة", "قيمة مؤسسية", "الفئات المستهدفة في برامجنا", "الفئات التسع الأكثر استحقاقاً للدعم والتمكين", "الاطلاع على الحوكمة والتقارير والشفافية"],
+    tr: ["Kurumsal çalışma sistemi", "Hedeflerimiz, değerlerimiz ve hedef gruplarımız", "Çalışmalarımızı yöneten temel standartlar ve desteklediğimiz grupların öncelikleri", "Kurumsal hedeflerimiz", "Onaylı beş stratejik hedef", "Etik ve mesleki standartlar", "Altı temel değerimiz", "Her proje, müdahale ve ortaklıkta bu değerlere bağlı kalırız", "Kurumsal değer", "Programlarımızın hedef grupları", "Destek ve güçlenmeye en çok ihtiyaç duyan dokuz grup", "Yönetişim, raporlar ve şeffaflığı incele"],
+    en: ["Our institutional framework", "Our goals, values, and target groups", "The enduring standards that guide our work and the priorities of the communities we serve", "Institutional goals", "Five approved strategic goals", "Ethical and professional standards", "Our six core values", "We uphold these values in every project, intervention, and partnership", "Institutional value", "Target groups in our programs", "Nine groups with the greatest need for support and empowerment", "View governance, reports, and transparency"],
+  }[language];
 
   return (
     <div className="py-12 sm:py-20 space-y-20">
@@ -15,13 +20,13 @@ export default function GoalsValuesPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
           <Target className="w-4 h-4" />
-          <span>منظومة العمل المؤسسي</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-          أهدافنا وقيمنا والفئات المستهدفة
+          {copy[1]}
         </h1>
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-          المعايير الراسخة التي تحكم أداءنا، وأولويات الفئات الإنسانية التي نسخر طاقاتنا لأجلها
+          {copy[2]}
         </p>
       </section>
 
@@ -32,8 +37,8 @@ export default function GoalsValuesPage() {
             <Target className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-slate-900">أهداف الجمعية المؤسسية</h2>
-            <p className="text-xs text-slate-500">الغايات الاستراتيجية الخمس المعتمدة في اللائحة التأسيسية</p>
+            <h2 className="text-2xl font-black text-slate-900">{copy[3]}</h2>
+            <p className="text-xs text-slate-500">{copy[4]}</p>
           </div>
         </div>
 
@@ -61,11 +66,11 @@ export default function GoalsValuesPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-8 space-y-12">
           <div className="text-center space-y-2 max-w-2xl mx-auto">
             <span className="text-xs font-bold tracking-widest text-primary-400 uppercase">
-              المعايير الأخلاقية والمهنية
+              {copy[5]}
             </span>
-            <h2 className="text-3xl font-black">قيمنا الست الراسخة</h2>
+            <h2 className="text-3xl font-black">{copy[6]}</h2>
             <p className="text-xs text-slate-400">
-              نلتزم بهذه القيم في كل مشروع وتدخل ميداني وشراكة إنسانية نقيمها
+              {copy[7]}
             </p>
           </div>
 
@@ -78,7 +83,7 @@ export default function GoalsValuesPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-3xl font-black text-primary-400">{val.number}</span>
                   <span className="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 font-semibold">
-                    قيمة مؤسسية
+                    {copy[8]}
                   </span>
                 </div>
                 <h3 className="text-xl font-bold text-white">
@@ -100,8 +105,8 @@ export default function GoalsValuesPage() {
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-2xl font-black text-slate-900">الفئات المستهدفة في برامجنا</h2>
-            <p className="text-xs text-slate-500">الفئات التسع الأكثر استحقاقاً للدعم والتمكين الإنساني</p>
+            <h2 className="text-2xl font-black text-slate-900">{copy[9]}</h2>
+            <p className="text-xs text-slate-500">{copy[10]}</p>
           </div>
         </div>
 
@@ -128,7 +133,7 @@ export default function GoalsValuesPage() {
           href="/governance"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-md transition"
         >
-          <span>الاطلاع على الحوكمة والتقارير والشفافية</span>
+          <span>{copy[11]}</span>
           <ArrowRight className="w-4 h-4 rtl:rotate-180" />
         </Link>
       </section>

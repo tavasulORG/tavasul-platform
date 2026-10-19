@@ -12,8 +12,13 @@ import { MapPin, Globe2, CheckCircle2, Heart, ArrowRight } from "lucide-react";
 export default function CountryDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const { projects, openQuickDonate } = useDonation();
+  const copy = {
+    ar: ["نطاق العمل الميداني", "تبرع لإغاثة", "نظرة عامة على الواقع الميداني", "أبرز مجالات التدخل الميداني", "مؤشرات الأثر", "إجمالي المستفيدين", "المشاريع الجارية", "تبرع عاجل الآن", "دول ومناطق أخرى", "المشاريع الإنسانية في", "مشاريع وحملات جارية تستقبل تبرعاتكم لدعم أهالي المنطقة", "جميع المشاريع", "لا توجد مشاريع مخصصة نشطة حالياً لهذه المنطقة. يمكنك التوجيه عبر صندوق الإغاثة العامة."],
+    tr: ["Saha faaliyet alanı", "Acil destek ver:", "Sahadaki duruma genel bakış", "Başlıca saha müdahaleleri", "Etki göstergeleri", "Toplam faydalanıcı", "Devam eden projeler", "Şimdi acil bağış yap", "Diğer ülke ve bölgeler", "İnsani yardım projeleri:", "Bölge halkını desteklemek için bağış kabul eden aktif proje ve kampanyalar", "Tüm projeler", "Bu bölgeye özel aktif proje bulunmuyor. Bağışınızı genel acil yardım fonuna yönlendirebilirsiniz."],
+    en: ["Field operation area", "Donate to support", "Overview of the field situation", "Key field interventions", "Impact indicators", "Total beneficiaries", "Ongoing projects", "Donate urgently now", "Other countries and regions", "Humanitarian projects in", "Active projects and campaigns accepting donations to support local communities", "All projects", "There are currently no active projects dedicated to this region. You can contribute through the general relief fund."],
+  }[language];
 
   const region = regionsData.find((r) => r.slug === slug);
   if (!region) {
@@ -37,7 +42,7 @@ export default function CountryDetailPage() {
           <div className="flex items-center gap-3">
             <span className="text-4xl sm:text-5xl">{region.flag}</span>
             <div className="inline-block bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
-              نطاق العمل الميداني
+              {copy[0]}
             </div>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight">
@@ -53,7 +58,7 @@ export default function CountryDetailPage() {
               className="px-6 py-3 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-xs shadow-lg shadow-primary-500/25 flex items-center gap-2 transition"
             >
               <Heart className="w-4 h-4 fill-white" />
-              <span>تبرع لإغاثة {region.name[language] || region.name.ar}</span>
+              <span>{copy[1]} {region.name[language] || region.name.ar}</span>
             </button>
           </div>
         </div>
@@ -64,7 +69,7 @@ export default function CountryDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 bg-white p-8 sm:p-10 rounded-3xl border border-slate-100 shadow-sm space-y-8">
             <div className="space-y-4">
-              <h2 className="text-2xl font-black text-slate-900">نظرة عامة على الواقع الميداني</h2>
+              <h2 className="text-2xl font-black text-slate-900">{copy[2]}</h2>
               <p className="text-sm sm:text-base text-slate-700 leading-loose text-justify">
                 {region.overview[language] || region.overview.ar}
               </p>
@@ -72,7 +77,7 @@ export default function CountryDetailPage() {
 
             {/* Key Interventions */}
             <div className="space-y-4 pt-6 border-t border-slate-100">
-              <h3 className="text-lg font-bold text-slate-900">أبرز مجالات التدخل الميداني:</h3>
+              <h3 className="text-lg font-bold text-slate-900">{copy[3]}:</h3>
               <div className="space-y-3">
                 {region.keyInterventions.map((item, idx) => (
                   <div
@@ -92,18 +97,18 @@ export default function CountryDetailPage() {
           {/* Stats Sidebar */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-slate-900 text-white p-6 rounded-3xl space-y-4 shadow-xl">
-              <h3 className="text-base font-bold border-b border-slate-800 pb-3">مؤشرات الأثر</h3>
+              <h3 className="text-base font-bold border-b border-slate-800 pb-3">{copy[4]}</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400">إجمالي المستفيدين:</span>
+                  <span className="text-slate-400">{copy[5]}:</span>
                   <strong className="text-primary-400 font-bold text-sm">
                     +{region.beneficiariesCount.toLocaleString()}
                   </strong>
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400">المشاريع الجارية:</span>
+                  <span className="text-slate-400">{copy[6]}:</span>
                   <strong className="text-white font-bold text-sm">
-                    {region.activeProjectsCount} مشاريع
+                    {region.activeProjectsCount} {t("projectsWord")}
                   </strong>
                 </div>
               </div>
@@ -113,13 +118,13 @@ export default function CountryDetailPage() {
                 className="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 mt-4"
               >
                 <Heart className="w-4 h-4 fill-white" />
-                <span>تبرع عاجل الآن</span>
+                <span>{copy[7]}</span>
               </button>
             </div>
 
             {/* Other countries navigation */}
             <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3">
-              <h4 className="font-bold text-xs text-slate-800">دول ومناطق أخرى</h4>
+              <h4 className="font-bold text-xs text-slate-800">{copy[8]}</h4>
               <div className="space-y-1.5">
                 {regionsData
                   .filter((r) => r.slug !== region.slug)
@@ -144,10 +149,10 @@ export default function CountryDetailPage() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-              المشاريع الإنسانية في {region.name[language] || region.name.ar}
+              {copy[9]} {region.name[language] || region.name.ar}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              مشاريع وحملات جارية تستقبل تبرعاتكم لدعم أهالي المنطقة
+              {copy[10]}
             </p>
           </div>
 
@@ -155,7 +160,7 @@ export default function CountryDetailPage() {
             href="/projects"
             className="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1"
           >
-            <span>جميع المشاريع</span>
+            <span>{copy[11]}</span>
             <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
           </Link>
         </div>
@@ -168,7 +173,7 @@ export default function CountryDetailPage() {
           </div>
         ) : (
           <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-500 text-xs">
-            لا توجد مشاريع مخصصة نشطة حالياً لهذه المنطقة. يمكنك التوجيه عبر صندوق الإغاثة العامة.
+            {copy[12]}
           </div>
         )}
       </section>

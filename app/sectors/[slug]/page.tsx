@@ -26,6 +26,11 @@ export default function SectorDetailPage() {
   const slug = params?.slug as string;
   const { language, t } = useLanguage();
   const { projects, openQuickDonate } = useDonation();
+  const copy = {
+    ar: ["تبرع لصالح هذا المجال", "نطاق التدخل وأهمية القطاع", "الأهداف الاستراتيجية للقطاع", "إحصائيات القطاع", "إجمالي المستفيدين", "المشاريع المنفذة", "المشاريع المكتملة", "مكتمل بنجاح", "دعم مشاريع القطاع الآن", "قطاعات عمل أخرى", "مشاريع وحملات", "ساهم مباشرة في تمويل مشاريع هذا المجال", "جميع المشاريع", "لا توجد مشاريع نشطة حالياً في هذا المجال. يمكنك التبرع للصندوق العام لدعم التدخلات الطارئة."],
+    tr: ["Bu alana bağış yap", "Müdahale kapsamı ve alanın önemi", "Alanın stratejik hedefleri", "Alan istatistikleri", "Toplam faydalanıcı", "Uygulanan projeler", "Tamamlanan projeler", "başarıyla tamamlandı", "Alan projelerini şimdi destekle", "Diğer çalışma alanları", "Proje ve kampanyalar:", "Bu alandaki projelere doğrudan katkıda bulunun", "Tüm projeler", "Bu alanda şu anda aktif proje bulunmuyor. Acil müdahaleleri desteklemek için genel fona bağış yapabilirsiniz."],
+    en: ["Donate to this sector", "Scope and importance of this sector", "Strategic objectives", "Sector statistics", "Total beneficiaries", "Projects delivered", "Completed projects", "successfully completed", "Support sector projects now", "Other sectors", "Projects and campaigns in", "Contribute directly to projects in this field", "All projects", "There are currently no active projects in this sector. You can support emergency interventions through the general fund."],
+  }[language];
 
   const sector = sectorsData.find((s) => s.slug === slug);
   if (!sector) {
@@ -83,7 +88,7 @@ export default function SectorDetailPage() {
               className="px-6 py-3 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold text-xs shadow-lg shadow-primary-500/25 flex items-center gap-2 transition"
             >
               <Heart className="w-4 h-4 fill-white" />
-              <span>تبرع لصالح هذا المجال</span>
+              <span>{copy[0]}</span>
             </button>
           </div>
         </div>
@@ -95,7 +100,7 @@ export default function SectorDetailPage() {
           {/* Detailed Narrative */}
           <div className="lg:col-span-8 bg-white p-8 sm:p-10 rounded-3xl border border-slate-100 shadow-sm space-y-8">
             <div className="space-y-4">
-              <h2 className="text-2xl font-black text-slate-900">نطاق التدخل وأهمية القطاع</h2>
+              <h2 className="text-2xl font-black text-slate-900">{copy[1]}</h2>
               <p className="text-sm sm:text-base text-slate-700 leading-loose text-justify">
                 {sector.description[language] || sector.description.ar}
               </p>
@@ -103,7 +108,7 @@ export default function SectorDetailPage() {
 
             {/* Strategic Objectives */}
             <div className="space-y-4 pt-6 border-t border-slate-100">
-              <h3 className="text-lg font-bold text-slate-900">الأهداف الاستراتيجية للقطاع:</h3>
+              <h3 className="text-lg font-bold text-slate-900">{copy[2]}:</h3>
               <div className="space-y-3">
                 {sector.objectives.map((obj, idx) => (
                   <div
@@ -123,24 +128,24 @@ export default function SectorDetailPage() {
           {/* Stats & Quick Actions Sidebar */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-slate-900 text-white p-6 rounded-3xl space-y-4 shadow-xl">
-              <h3 className="text-base font-bold border-b border-slate-800 pb-3">إحصائيات القطاع</h3>
+              <h3 className="text-base font-bold border-b border-slate-800 pb-3">{copy[3]}</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400">إجمالي المستفيدين:</span>
+                  <span className="text-slate-400">{copy[4]}:</span>
                   <strong className="text-primary-400 font-bold text-sm">
                     +{sector.stats.beneficiariesCount.toLocaleString()}
                   </strong>
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400">المشاريع المنفذة:</span>
+                  <span className="text-slate-400">{copy[5]}:</span>
                   <strong className="text-white font-bold text-sm">
-                    {sector.stats.projectsCount} مشروع
+                    {sector.stats.projectsCount} {t("project")}
                   </strong>
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400">المشاريع المكتملة:</span>
+                  <span className="text-slate-400">{copy[6]}:</span>
                   <strong className="text-emerald-400 font-bold text-sm">
-                    {sector.stats.completedProjects} مكتمل بنجاح
+                    {sector.stats.completedProjects} {copy[7]}
                   </strong>
                 </div>
               </div>
@@ -150,13 +155,13 @@ export default function SectorDetailPage() {
                 className="w-full py-3 rounded-xl bg-primary-600 hover:bg-primary-500 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 mt-4"
               >
                 <Heart className="w-4 h-4 fill-white" />
-                <span>دعم مشاريع القطاع الآن</span>
+                <span>{copy[8]}</span>
               </button>
             </div>
 
             {/* Other sectors quick links */}
             <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-3">
-              <h4 className="font-bold text-xs text-slate-800">قطاعات عمل أخرى</h4>
+              <h4 className="font-bold text-xs text-slate-800">{copy[9]}</h4>
               <div className="space-y-1.5">
                 {sectorsData
                   .filter((s) => s.slug !== sector.slug)
@@ -181,10 +186,10 @@ export default function SectorDetailPage() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-              مشاريع وحملات {sector.title[language] || sector.title.ar}
+              {copy[10]} {sector.title[language] || sector.title.ar}
             </h2>
             <p className="text-xs text-slate-500 mt-1">
-              ساهم مباشرة في تمويل مشاريع هذا المجال
+              {copy[11]}
             </p>
           </div>
 
@@ -192,7 +197,7 @@ export default function SectorDetailPage() {
             href="/projects"
             className="text-xs font-bold text-primary-600 hover:text-primary-700 flex items-center gap-1"
           >
-            <span>جميع المشاريع</span>
+            <span>{copy[12]}</span>
             <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
           </Link>
         </div>
@@ -205,7 +210,7 @@ export default function SectorDetailPage() {
           </div>
         ) : (
           <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center text-slate-500 text-xs">
-            لا توجد مشاريع نشطة حالياً في هذا المجال. يمكنك التبرع للصندوق العام لدعم التدخلات الطارئة.
+            {copy[13]}
           </div>
         )}
       </section>

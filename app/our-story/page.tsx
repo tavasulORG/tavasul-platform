@@ -7,8 +7,13 @@ import { aboutData } from "@/data/about";
 import { ShieldCheck, Heart, History, Users, Globe2, ArrowRight } from "lucide-react";
 
 export default function OurStoryPage() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const story = aboutData.ourStory[language] || aboutData.ourStory.ar;
+  const copy = {
+    ar: ["أكثر من 30 عاماً من العمل الإنساني", "عطاء متواصل يمتد عبر العقود لخدمة الإنسان وصون كرامته", "عاماً", "خبرة ميدانية تراكمية", "خبرة انطلقت من بيئات إنسانية شديدة الصعوبة وراكمت نجاحات موثوقة في إدارة المشاريع.", "تأسيس مقر إسطنبول", "جمعية تركية رسمية غير ربحية برقم ترخيص 34-292-049 لتوسيع الأثر دولياً.", "أقاليم", "انتشار إنساني واسع", "تدخلات منسقة في تركيا واليمن وسوريا وفلسطين وعدد من الدول الأفريقية.", "تعرف على رسالتنا ورؤيتنا المؤسسية"],
+    tr: ["30 yılı aşkın insani yardım çalışması", "İnsanlığa hizmet etmek ve onurunu korumak için onlarca yıldır süren iyilik", "yıl", "Birikimli saha deneyimi", "Zorlu insani ortamlarda başlayan ve proje yönetiminde güvenilir başarılar biriktiren deneyim.", "İstanbul merkezinin kuruluşu", "Uluslararası etkiyi büyütmek üzere 34-292-049 sicil numarasıyla kurulan resmi Türk derneği.", "bölge", "Geniş insani erişim", "Türkiye, Yemen, Suriye, Filistin ve çeşitli Afrika ülkelerinde koordineli müdahaleler.", "Kurumsal misyon ve vizyonumuzu keşfedin"],
+    en: ["Over 30 years of humanitarian work", "Decades of continuous giving in service of people and their dignity", "years", "Accumulated field experience", "Experience forged in demanding humanitarian settings with a trusted record in project management.", "Istanbul office established", "A formally registered Turkish non-profit under No. 34-292-049, created to expand global impact.", "regions", "Broad humanitarian reach", "Coordinated interventions across Türkiye, Yemen, Syria, Palestine, and several African countries.", "Discover our institutional mission and vision"],
+  }[language];
 
   return (
     <div className="py-12 sm:py-20 space-y-16">
@@ -16,7 +21,7 @@ export default function OurStoryPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-3.5 py-1.5 rounded-full text-xs font-bold border border-primary-100">
           <History className="w-4 h-4" />
-          <span>أكثر من 30 عاماً من العمل الإنساني</span>
+          <span>{copy[0]}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
           {story.title}
@@ -37,7 +42,7 @@ export default function OurStoryPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
               <span className="text-white text-xs sm:text-sm font-semibold">
-                عطاء متواصل يمتد عبر العقود لخدمة الإنسان وصون كرامته
+                {copy[1]}
               </span>
             </div>
           </div>
@@ -51,26 +56,26 @@ export default function OurStoryPage() {
           {/* Timeline Milestones */}
           <div className="pt-8 border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-2">
-              <div className="text-2xl font-black text-primary-600">30+ عاماً</div>
-              <div className="font-bold text-slate-800 text-sm">خبرة ميدانية تراكمية</div>
+              <div className="text-2xl font-black text-primary-600">30+ {copy[2]}</div>
+              <div className="font-bold text-slate-800 text-sm">{copy[3]}</div>
               <p className="text-xs text-slate-500">
-                انطلقت من أشد بيئات العمل الإنساني صعوبة في اليمن، مراكمة نجاحات موثوقة في إدارة المشاريع والتنسيق مع المانحين الدوليين.
+                {copy[4]}
               </p>
             </div>
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-2">
-              <div className="text-2xl font-black text-slate-900">2025م</div>
-              <div className="font-bold text-slate-800 text-sm">تأسيس مقر إسطنبول</div>
+              <div className="text-2xl font-black text-slate-900">2025</div>
+              <div className="font-bold text-slate-800 text-sm">{copy[5]}</div>
               <p className="text-xs text-slate-500">
-                تأسست جمعية تواصل للإغاثة والتنمية كجمعية تركية رسمية غير ربحية برقم ترخيص (34-292-049) لتكون مظلة دولية لتوسيع الأثر.
+                {copy[6]}
               </p>
             </div>
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-2">
-              <div className="text-2xl font-black text-emerald-600">5 أقاليم</div>
-              <div className="font-bold text-slate-800 text-sm">انتشار إنساني واسع</div>
+              <div className="text-2xl font-black text-emerald-600">5 {copy[7]}</div>
+              <div className="font-bold text-slate-800 text-sm">{copy[8]}</div>
               <p className="text-xs text-slate-500">
-                تدخلات مباشرة ومنسقة في تركيا، اليمن، سوريا، فلسطين، والدول الأشد تضرراً في القارة الأفريقية.
+                {copy[9]}
               </p>
             </div>
           </div>
@@ -83,7 +88,7 @@ export default function OurStoryPage() {
           href="/about"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-md transition"
         >
-          <span>تعرف على رسالتنا ورؤيتنا المؤسسية</span>
+          <span>{copy[10]}</span>
           <ArrowRight className="w-4 h-4 rtl:rotate-180" />
         </Link>
       </section>

@@ -28,10 +28,10 @@ export function Footer() {
             </div>
             <div>
               <div className="text-white font-bold text-sm">
-                الترخيص الرسمي والامتثال القانوني
+                {t("footerLegalTitle")}
               </div>
               <div className="text-[11px] text-slate-400">
-                جمعية إنسانية تركية غير ربحية - ترخيص رقم: <span className="text-primary-400 font-mono font-bold">34-292-049</span> صادر عن مديرية العلاقات مع منظمات المجتمع المدني بولاية إسطنبول.
+                {t("footerLegalDescription")}
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@ export function Footer() {
               href="/governance"
               className="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition border border-slate-700 flex items-center gap-1.5"
             >
-              <span>تقارير الحوكمة والشفافية</span>
+              <span>{t("governanceReports")}</span>
               <ExternalLink className="w-3 h-3 text-slate-400" />
             </Link>
           </div>
@@ -73,7 +73,7 @@ export function Footer() {
           <div className="space-y-2 pt-2 text-[11px]">
             <div className="flex items-center gap-2">
               <MapPin className="w-3.5 h-3.5 text-primary-400 shrink-0" />
-              <span>İstanbul, Türkiye - إسطنبول، تركيا</span>
+              <span>{t("address")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-3.5 h-3.5 text-primary-400 shrink-0" />
@@ -127,7 +127,7 @@ export function Footer() {
                 href="/projects"
                 className="text-primary-400 hover:text-primary-300 font-bold block"
               >
-                جميع المشاريع الإنسانية →
+                {t("allHumanitarianProjects")} →
               </Link>
             </li>
           </ul>
@@ -136,7 +136,7 @@ export function Footer() {
         {/* Column 4: Quick Navigation & Transparency */}
         <div className="space-y-3">
           <h4 className="text-white font-bold text-sm tracking-wide">
-            روابط هامة
+            {t("importantLinks")}
           </h4>
           <ul className="space-y-2">
             <li>
@@ -184,15 +184,15 @@ export function Footer() {
           <p>{t("allRightsReserved")}</p>
           <div className="flex items-center gap-4">
             <Link href="/governance" className="hover:text-slate-400 transition">
-              سياسة الخصوصية
+              {t("privacyPolicy")}
             </Link>
             <span>•</span>
             <Link href="/governance" className="hover:text-slate-400 transition">
-              الشروط والأحكام
+              {t("termsConditions")}
             </Link>
             <span>•</span>
             <Link href="/bank-accounts" className="hover:text-slate-400 transition">
-              حسابات التبرع المعتمدة
+              {t("approvedDonationAccounts")}
             </Link>
           </div>
         </div>

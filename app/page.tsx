@@ -46,6 +46,10 @@ export default function HomePage() {
   const [copiedIbanId, setCopiedIbanId] = useState<string | null>(null);
 
   const urgentProjects = projects.filter((p) => p.status === "urgent" || p.featured).slice(0, 3);
+  const donationMinutes: Record<string, number> = { "don-1": 3, "don-2": 11, "don-3": 25, "don-4": 42 };
+  const relativeTime = new Intl.RelativeTimeFormat(language === "ar" ? "ar" : language === "tr" ? "tr" : "en", {
+    numeric: "auto",
+  });
 
   const getSectorIcon = (slug: string) => {
     switch (slug) {
@@ -93,7 +97,7 @@ export default function HomePage() {
                 <span>{t("experienceBadge")}</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-brand font-black tracking-tight leading-[1.2] drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)] text-balance">
                 {t("heroTitle")}
               </h1>
 
@@ -136,7 +140,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-sm text-slate-900">{t("quickDonateTitle")}</h3>
-                      <p className="text-[11px] text-slate-500">مباشرة عبر البطاقة أو الحساب البنكي</p>
+                      <p className="text-[11px] text-slate-500">{t("quickDonationMethods")}</p>
                     </div>
                   </div>
 
@@ -185,9 +189,9 @@ export default function HomePage() {
                   <div className="pt-1">
                     <span className="text-xs font-semibold text-slate-600 block mb-1">{t("donationTarget")}:</span>
                     <div className="bg-slate-50 rounded-xl p-2.5 border border-slate-200/80 text-xs font-medium text-slate-700 flex items-center justify-between">
-                      <span>إغاثة عاجلة - فلسطين وغزة</span>
+                      <span>{t("urgentGaza")}</span>
                       <span className="text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">
-                        أولوية قصوى
+                        {t("topPriority")}
                       </span>
                     </div>
                   </div>
@@ -199,12 +203,12 @@ export default function HomePage() {
                   >
                     <Heart className="w-4 h-4 fill-white" />
                     <span>
-                      تبرع الآن بمبلغ {convertUSDToCurrency(heroAmountUSD).toLocaleString()} {currencySymbol}
+                      {t("donateAmountPrefix")} {convertUSDToCurrency(heroAmountUSD).toLocaleString()} {currencySymbol}
                     </span>
                   </button>
 
                   <p className="text-[10px] text-slate-400 text-center pt-1">
-                    إيصال رسمي فوري معتمد برقم مرجعي وتأكيد فوري للعملية
+                    {t("instantReceiptNote")}
                   </p>
                 </div>
               </div>
@@ -227,12 +231,14 @@ export default function HomePage() {
                 key={d.id}
                 className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60 shrink-0"
               >
-                <span className="font-bold text-slate-800">{d.donorName}</span>
-                <span className="text-slate-400">تبرع بـ</span>
+                <span className="font-bold text-slate-800">{d.isAnonymous ? t("anonymous") : d.donorName}</span>
+                <span className="text-slate-400">{t("donated")}</span>
                 <span className="font-extrabold text-primary-600">
                   {d.amount.toLocaleString()} {d.currency}
                 </span>
-                <span className="text-[10px] text-slate-400">({d.timestamp})</span>
+                <span className="text-[10px] text-slate-400">
+                  ({donationMinutes[d.id] ? relativeTime.format(-donationMinutes[d.id], "minute") : t("justNow")})
+                </span>
               </div>
             ))}
           </div>
@@ -270,7 +276,7 @@ export default function HomePage() {
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full mb-2">
               <Flame className="w-3.5 h-3.5" />
-              <span>استجابة ميدانية عاجلة</span>
+              <span>{t("urgentFieldResponse")}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               {t("urgentProjectsTitle")}
@@ -332,7 +338,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="pt-6 flex items-center justify-between text-xs font-semibold text-primary-600 border-t border-slate-100 mt-4">
-                  <span>استكشف المشاريع</span>
+                  <span>{t("exploreProjects")}</span>
                   <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
                 </div>
               </Link>
@@ -372,7 +378,7 @@ export default function HomePage() {
                   {reg.name[language] || reg.name.ar}
                 </h3>
                 <span className="text-[11px] text-slate-300">
-                  +{reg.beneficiariesCount.toLocaleString()} مستفيد
+                  +{reg.beneficiariesCount.toLocaleString()} {t("beneficiary")}
                 </span>
               </div>
             </Link>
@@ -386,13 +392,13 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
             <div>
               <span className="text-primary-400 text-xs font-bold block mb-1">
-                التبرع المالي المباشر
+                {t("directFinancialDonation")}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                الحسابات البنكية الرسمية المعتمدة
+                {t("officialBankAccounts")}
               </h2>
               <p className="text-xs text-slate-400 mt-1">
-                اسم الحساب الرسمي: <strong className="text-white">TAVASUL YARDIM VE KALKINMA DERNEĞİ</strong>
+                {t("officialAccountName")}: <strong className="text-white">TAVASUL YARDIM VE KALKINMA DERNEĞİ</strong>
               </p>
             </div>
 
@@ -400,7 +406,7 @@ export default function HomePage() {
               href="/bank-accounts"
               className="py-2.5 px-5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold transition flex items-center gap-1.5"
             >
-              <span>عرض جميع الحسابات الدولية</span>
+              <span>{t("viewAllInternationalAccounts")}</span>
               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </Link>
           </div>
@@ -423,7 +429,7 @@ export default function HomePage() {
                     type="button"
                     onClick={() => handleCopyIban(acc.id, acc.iban)}
                     className="shrink-0 ms-2 p-1 text-primary-400 hover:text-white transition"
-                    title="نسخ الآيبان"
+                    title={t("copyIban")}
                   >
                     {copiedIbanId === acc.id ? (
                       <Check className="w-4 h-4 text-emerald-400" />
@@ -444,7 +450,7 @@ export default function HomePage() {
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-primary-700 bg-white px-3 py-1 rounded-full shadow-sm">
               <ShieldCheck className="w-4 h-4 text-primary-600" />
-              <span>رخصة رسمية معتمدة رقم 34-292-049</span>
+              <span>{t("officialLicenseBadge")}</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
               {t("transparencyTitle")}
@@ -459,13 +465,13 @@ export default function HomePage() {
               href="/governance"
               className="py-3 px-6 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-md transition text-center"
             >
-              الاطلاع على تقارير التدقيق المالي
+              {t("financialAuditReports")}
             </Link>
             <Link
               href="/partners"
               className="py-3 px-6 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs border border-slate-200 transition text-center"
             >
-              شركاؤنا الدوليون والمحليون
+              {t("partnersCta")}
             </Link>
           </div>
         </div>

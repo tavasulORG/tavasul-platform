@@ -88,7 +88,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
             {/* Percentage & Donors */}
             <div className="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
-              <span className="font-bold text-slate-700">{percent}% منجز</span>
+              <span className="font-bold text-slate-700">{percent}% {t("completedWord")}</span>
               <span className="flex items-center gap-1">
                 <Users className="w-3 h-3 text-slate-400" />
                 <span>{project.donorsCount} {t("donors")}</span>

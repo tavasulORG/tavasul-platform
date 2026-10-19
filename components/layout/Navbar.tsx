@@ -14,7 +14,6 @@ import {
   Menu,
   X,
   Phone,
-  LayoutDashboard,
   Coins,
   ShieldCheck,
   Building,
@@ -32,52 +31,52 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
+    <header className="sticky top-0 z-40 bg-white shadow-md shadow-slate-200/70">
       {/* Top Utility Bar */}
-      <div className="bg-slate-900 text-slate-300 text-[11px] py-1.5 px-4 sm:px-8 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 text-primary-400 font-semibold">
+      <div className="h-11 bg-gradient-to-l from-primary-700 to-primary-500 text-white text-xs px-4 sm:px-8">
+        <div className="max-w-7xl h-full mx-auto flex items-center justify-center md:justify-between">
+          <div className="hidden md:flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-white font-semibold">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>ترخيص تركي رقم: 34-292-049 (إسطنبول)</span>
+              <span>{t("licenseShort")}</span>
             </span>
             <span className="hidden sm:inline-block text-slate-600">|</span>
             <a
               href="tel:+905340000000"
               className="hidden sm:flex items-center gap-1 hover:text-white transition"
             >
-              <Phone className="w-3 h-3 text-slate-400" />
+              <Phone className="w-3 h-3 text-white/70" />
               <span dir="ltr">+90 534 000 0000</span>
             </a>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Currency Selector */}
-            <div className="flex items-center gap-1 bg-slate-800/80 px-2 py-0.5 rounded-lg border border-slate-700">
+            <div className="flex items-center gap-1 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20">
               <Coins className="w-3 h-3 text-amber-400" />
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value as Currency)}
                 className="bg-transparent text-[11px] font-bold text-white focus:outline-none cursor-pointer"
               >
-                <option value="USD" className="bg-slate-800 text-white">USD ($)</option>
-                <option value="TRY" className="bg-slate-800 text-white">TRY (₺)</option>
-                <option value="EUR" className="bg-slate-800 text-white">EUR (€)</option>
-                <option value="SAR" className="bg-slate-800 text-white">SAR (ر.س)</option>
+                <option value="USD" className="bg-primary-700 text-white">USD ($)</option>
+                <option value="TRY" className="bg-primary-700 text-white">TRY (₺)</option>
+                <option value="EUR" className="bg-primary-700 text-white">EUR (€)</option>
+                <option value="SAR" className="bg-primary-700 text-white">SAR (ر.س)</option>
               </select>
             </div>
 
             {/* Language Switcher */}
-            <div className="flex items-center gap-1 bg-slate-800/80 px-2 py-0.5 rounded-lg border border-slate-700">
-              <Globe className="w-3 h-3 text-sky-400" />
+            <div className="flex items-center gap-1 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20">
+              <Globe className="w-3 h-3 text-white/80" />
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as Language)}
                 className="bg-transparent text-[11px] font-bold text-white focus:outline-none cursor-pointer"
               >
-                <option value="ar" className="bg-slate-800 text-white">العربية</option>
-                <option value="tr" className="bg-slate-800 text-white">Türkçe</option>
-                <option value="en" className="bg-slate-800 text-white">English</option>
+                <option value="ar" className="bg-primary-700 text-white">العربية</option>
+                <option value="tr" className="bg-primary-700 text-white">Türkçe</option>
+                <option value="en" className="bg-primary-700 text-white">English</option>
               </select>
             </div>
           </div>
@@ -85,29 +84,24 @@ export function Navbar() {
       </div>
 
       {/* Main Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
-        {/* Logo & Brand */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <img
-            src="/images/logo.jpg"
-            alt="Tawasul Logo"
-            className="h-11 w-auto object-contain rounded-lg"
-          />
-          <div className="flex flex-col">
-            <span className="font-extrabold text-slate-900 text-sm sm:text-base leading-tight group-hover:text-primary-600 transition">
-              {t("brandName")}
-            </span>
-            <span className="text-[10px] text-slate-500 font-semibold tracking-wider">
-              TAVASUL YARDIM VE KALKINMA DERNEĞİ
-            </span>
+      <div className="bg-white border-b border-slate-100">
+        <div className="max-w-7xl h-[72px] mx-auto px-4 sm:px-8 flex items-center justify-between">
+          {/* Logo */}
+          <div className="h-8 flex shrink-0 items-center pe-3 sm:pe-5 border-e border-slate-200">
+            <Link href="/" className="flex items-center group">
+              <img
+                src="/images/logo.jpg"
+                alt="Tawasul Logo"
+                className="h-10 w-[138px] sm:h-12 sm:w-auto sm:max-w-[210px] object-contain"
+              />
+            </Link>
           </div>
-        </Link>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center gap-1 text-xs font-bold text-slate-700">
+          {/* Desktop Nav Links */}
+          <nav className="hidden lg:flex items-center gap-1 text-sm font-bold text-slate-700">
           <Link
             href="/"
-            className="px-3 py-2 rounded-xl hover:text-primary-600 hover:bg-slate-50 transition"
+            className="px-3 py-2 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition"
           >
             {t("navHome")}
           </Link>
@@ -118,7 +112,7 @@ export function Navbar() {
             onMouseEnter={() => setActiveDropdown("about")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-1 px-3 py-2 rounded-xl hover:text-primary-600 hover:bg-slate-50 transition">
+            <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition">
               <span>{t("navAbout")}</span>
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
@@ -171,7 +165,7 @@ export function Navbar() {
             onMouseEnter={() => setActiveDropdown("sectors")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-1 px-3 py-2 rounded-xl hover:text-primary-600 hover:bg-slate-50 transition">
+            <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition">
               <span>{t("navSectors")}</span>
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
@@ -179,7 +173,7 @@ export function Navbar() {
             {activeDropdown === "sectors" && (
               <div className="absolute top-full start-0 w-72 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 animate-fadeIn z-50">
                 <div className="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  القطاعات السبعة المعتمدة
+                  {t("approvedSectors")}
                 </div>
                 {sectorsData.map((sec) => (
                   <Link
@@ -200,7 +194,7 @@ export function Navbar() {
             onMouseEnter={() => setActiveDropdown("regions")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-1 px-3 py-2 rounded-xl hover:text-primary-600 hover:bg-slate-50 transition">
+            <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition">
               <span>{t("navWhereWeWork")}</span>
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
@@ -211,7 +205,7 @@ export function Navbar() {
                   href="/where-we-work"
                   className="block px-4 py-2 font-bold text-primary-600 hover:bg-primary-50 transition"
                 >
-                  نظرة عامة على الخريطة
+                  {t("mapOverview")}
                 </Link>
                 <div className="h-px bg-slate-100 my-1" />
                 {regionsData.map((reg) => (
@@ -234,7 +228,7 @@ export function Navbar() {
             onMouseEnter={() => setActiveDropdown("projects")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-1 px-3 py-2 rounded-xl hover:text-primary-600 hover:bg-slate-50 transition">
+            <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition">
               <span>{t("navProjects")}</span>
               <ChevronDown className="w-3.5 h-3.5" />
             </button>
@@ -265,32 +259,25 @@ export function Navbar() {
 
           <Link
             href="/bank-accounts"
-            className="px-3 py-2 rounded-xl hover:text-primary-600 hover:bg-slate-50 transition"
+            className="px-3 py-2 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition"
           >
             {t("navBanks")}
           </Link>
 
           <Link
             href="/contact"
-            className="px-3 py-2 rounded-xl hover:text-primary-600 hover:bg-slate-50 transition"
+            className="px-3 py-2 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition"
           >
             {t("navContact")}
           </Link>
 
-          <Link
-            href="/admin"
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-500 hover:text-primary-600 hover:bg-slate-50 transition text-[11px] font-semibold"
-          >
-            <LayoutDashboard className="w-3.5 h-3.5" />
-            <span>لوحة التحكم</span>
-          </Link>
-        </nav>
+          </nav>
 
-        {/* CTA Button & Mobile Toggle */}
-        <div className="flex items-center gap-2">
+          {/* CTA Button & Mobile Toggle */}
+          <div className="flex items-center gap-1 sm:gap-2 ps-3 sm:ps-5 border-s border-slate-200">
           <button
             onClick={() => openQuickDonate()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-primary-600 to-sky-500 hover:from-primary-700 hover:to-sky-600 text-white font-extrabold text-xs shadow-md shadow-primary-500/30 transition transform hover:-translate-y-0.5 active:translate-y-0"
+            className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-primary-500/25 transition"
           >
             <Heart className="w-4 h-4 fill-white" />
             <span>{t("donateNow")}</span>
@@ -298,10 +285,11 @@ export function Navbar() {
 
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition"
+            className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
+          </div>
         </div>
       </div>
 
@@ -387,7 +375,7 @@ export function Navbar() {
               {activeDropdown === "m-regions" && (
                 <div className="ps-4 pt-2 space-y-1 text-xs text-slate-600">
                   <Link href="/where-we-work" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 font-bold text-primary-600">
-                    نظرة عامة على الخريطة
+                    {t("mapOverview")}
                   </Link>
                   {regionsData.map((reg) => (
                     <Link
@@ -443,13 +431,6 @@ export function Navbar() {
               {t("navContact")}
             </Link>
 
-            <Link
-              href="/admin"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block py-2 px-3 rounded-xl hover:bg-slate-50 text-primary-600"
-            >
-              لوحة التحكم
-            </Link>
           </div>
         </div>
       )}

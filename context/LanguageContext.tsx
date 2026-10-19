@@ -36,6 +36,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     if (typeof document !== "undefined") {
       document.documentElement.lang = language;
       document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+      const dict = translations[language] || translations.ar;
+      document.title = dict.metaTitle;
+      const description = document.querySelector('meta[name="description"]');
+      if (description) {
+        description.setAttribute("content", dict.metaDescription);
+      }
     }
   }, [language]);
 
