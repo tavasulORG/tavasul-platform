@@ -5,7 +5,7 @@ export const regionsData: CountryRegion[] = [
     id: "reg-tr",
     slug: "turkey",
     flag: "🇹🇷",
-    coverImage: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/turkey-historic-galata.jpg",
     name: {
       ar: "تركيا",
       tr: "Türkiye",
@@ -45,7 +45,7 @@ export const regionsData: CountryRegion[] = [
     id: "reg-ye",
     slug: "yemen",
     flag: "🇾🇪",
-    coverImage: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/yemen-historic-sanaa.jpg",
     name: {
       ar: "اليمن",
       tr: "Yemen",
@@ -85,7 +85,7 @@ export const regionsData: CountryRegion[] = [
     id: "reg-sy",
     slug: "syria",
     flag: "🇸🇾",
-    coverImage: "https://images.unsplash.com/photo-1541888946425-d0fbb186f5f7?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/syria-historic-aleppo.jpg",
     name: {
       ar: "سوريا",
       tr: "Suriye",
@@ -125,11 +125,11 @@ export const regionsData: CountryRegion[] = [
     id: "reg-ps",
     slug: "palestine",
     flag: "🇵🇸",
-    coverImage: "https://images.unsplash.com/photo-1534951009808-766178b47a4f?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/palestine-historic-jerusalem.jpg",
     name: {
-      ar: "فلسطين (غزة والقدس)",
-      tr: "Filistin (Gazze & Kudüs)",
-      en: "Palestine (Gaza & Jerusalem)",
+      ar: "فلسطين",
+      tr: "Filistin",
+      en: "Palestine",
     },
     headline: {
       ar: "إغاثة طارئة عاجلة لقطاع غزة، وإطعام النازحين، وتوفير الرعاية الطبية الفورية",
@@ -165,7 +165,7 @@ export const regionsData: CountryRegion[] = [
     id: "reg-af",
     slug: "africa",
     flag: "🌍",
-    coverImage: "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/africa-historic-landmark.jpg",
     name: {
       ar: "دول أفريقيا المنكوبة",
       tr: "Afrika Kriz Bölgeleri",

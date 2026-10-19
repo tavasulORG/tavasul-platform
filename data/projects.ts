@@ -38,9 +38,9 @@ export const initialProjects: Project[] = [
     donorsCount: 1420,
     status: "urgent",
     featured: true,
-    coverImage: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/gaza-urgent-relief.jpg",
     gallery: [
-      "https://images.unsplash.com/photo-1541888946425-d0fbb186f5f7?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1000&q=80",
       "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1000&q=80",
     ],
     updates: [
@@ -109,7 +109,7 @@ export const initialProjects: Project[] = [
     donorsCount: 680,
     status: "active",
     featured: true,
-    coverImage: "https://images.unsplash.com/photo-1541888946425-d0fbb186f5f7?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/impact-solar-water.jpg",
     gallery: [
       "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80",
     ],
@@ -167,9 +167,9 @@ export const initialProjects: Project[] = [
     donorsCount: 930,
     status: "active",
     featured: true,
-    coverImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/syria-housing-village.jpg",
     gallery: [
-      "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1000&q=80",
+      "/images/syria-housing-village.jpg",
     ],
     updates: [
       {

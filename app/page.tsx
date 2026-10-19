@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { motion, type Variants } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDonation } from "@/context/DonationContext";
 import { sectorsData } from "@/data/sectors";
 import { regionsData } from "@/data/regions";
 import { ProjectCard } from "@/components/projects/ProjectCard";
+import { TrustJourney } from "@/components/home/TrustJourney";
+import { ImpactStorySection } from "@/components/home/ImpactStorySection";
 import { bankAccountsData } from "@/data/bankAccounts";
 import {
   Heart,
@@ -26,8 +30,49 @@ import {
   Flame,
   Globe2,
   Building,
-  Sparkles,
+  Award,
+  Scale,
+  Quote,
+  BookOpen,
 } from "lucide-react";
+
+const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const fadeUpVariants: Variants = {
+  hidden: { opacity: 0, y: 32 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: EASE_OUT_EXPO,
+    },
+  },
+};
+
+const staggerContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const cardItemVariants: Variants = {
+  hidden: { opacity: 0, y: 36, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.65,
+      ease: EASE_OUT_EXPO,
+    },
+  },
+};
 
 export default function HomePage() {
   const { language, t } = useLanguage();
@@ -36,14 +81,57 @@ export default function HomePage() {
     projects,
     recentDonations,
     formatAmount,
-    currency,
-    setCurrency,
-    currencySymbol,
-    convertUSDToCurrency,
   } = useDonation();
 
-  const [heroAmountUSD, setHeroAmountUSD] = useState(50);
   const [copiedIbanId, setCopiedIbanId] = useState<string | null>(null);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+
+    let resumeTimer: ReturnType<typeof setTimeout> | undefined;
+    let playPending = false;
+
+    const resumePlayback = () => {
+      if (document.hidden || playPending || !video.paused) return;
+
+      video.muted = true;
+      if (video.ended) video.currentTime = 0;
+      playPending = true;
+      void video.play().catch(() => {
+        // Retry on readiness, page return, or a user gesture if autoplay is blocked.
+      }).finally(() => {
+        playPending = false;
+      });
+    };
+
+    const scheduleResume = () => {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(resumePlayback, 500);
+    };
+
+    video.defaultMuted = true;
+    video.addEventListener("canplay", resumePlayback);
+    video.addEventListener("pause", scheduleResume);
+    video.addEventListener("ended", resumePlayback);
+    document.addEventListener("visibilitychange", resumePlayback);
+    document.addEventListener("pointerdown", resumePlayback);
+    document.addEventListener("keydown", resumePlayback);
+    window.addEventListener("pageshow", resumePlayback);
+    resumePlayback();
+
+    return () => {
+      clearTimeout(resumeTimer);
+      video.removeEventListener("canplay", resumePlayback);
+      video.removeEventListener("pause", scheduleResume);
+      video.removeEventListener("ended", resumePlayback);
+      document.removeEventListener("visibilitychange", resumePlayback);
+      document.removeEventListener("pointerdown", resumePlayback);
+      document.removeEventListener("keydown", resumePlayback);
+      window.removeEventListener("pageshow", resumePlayback);
+    };
+  }, []);
 
   const urgentProjects = projects.filter((p) => p.status === "urgent" || p.featured).slice(0, 3);
   const donationMinutes: Record<string, number> = { "don-1": 3, "don-2": 11, "don-3": 25, "don-4": 42 };
@@ -80,321 +168,324 @@ export default function HomePage() {
 
   return (
     <div className="space-y-16 sm:space-y-24 pb-20">
-      {/* 1. Hero Section With Integrated Quick Donate Box */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 text-white overflow-hidden py-16 sm:py-24">
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary-500 rounded-full blur-[140px]" />
-          <div className="absolute bottom-0 -left-20 w-80 h-80 bg-sky-400 rounded-full blur-[120px]" />
-        </div>
+      {/* 1. Hero Section - Modern Charity & Donation-First Experience */}
+      <section className="relative overflow-hidden bg-slate-950 text-white">
+        {/* Background Humanitarian Hero Video & Atmospheric Overlays */}
+        <motion.div
+          initial={{ scale: 1.06, opacity: 0.85 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.4, ease: EASE_OUT_EXPO }}
+          className="absolute inset-0 z-0"
+        >
+          <video
+            ref={heroVideoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          >
+            <source src="/videos/hero-tawasul.mp4" type="video/mp4" />
+          </video>
+          {/* Gradient overlay keeps the hero text readable over the video. */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/45 to-transparent md:bg-gradient-to-r md:from-slate-950/80 md:via-slate-950/40 md:to-transparent rtl:md:bg-gradient-to-l rtl:md:from-slate-950/80 rtl:md:via-slate-950/40 rtl:md:to-transparent" />
+        </motion.div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Column: Headline & Value Proposition */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs text-sky-200 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span>{t("experienceBadge")}</span>
-              </div>
-
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-brand font-black tracking-tight leading-[1.2] drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)] text-balance">
+        {/* Hero Content Container */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-12 sm:pb-16 lg:pb-20 min-h-[580px] lg:min-h-[660px] flex items-end">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end w-full">
+            
+            {/* Right Column (in RTL): Placed in lower arm area */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.15,
+                    delayChildren: 0.15,
+                  },
+                },
+              }}
+              className="lg:col-span-7 space-y-3.5 max-w-xl pb-2"
+            >
+              {/* Main Headline - Single Line, Clean Size */}
+              <motion.h1
+                variants={{
+                  hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: { duration: 0.8, ease: EASE_OUT_EXPO },
+                  },
+                }}
+                className="text-xl sm:text-2xl md:text-3xl lg:text-[2.25rem] font-brand font-black tracking-tight leading-tight text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.85)] whitespace-nowrap"
+              >
                 {t("heroTitle")}
-              </h1>
+              </motion.h1>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+              {/* Short Mission Description */}
+              <motion.p
+                variants={{
+                  hidden: { opacity: 0, y: 24, filter: "blur(4px)" },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    transition: { duration: 0.75, ease: EASE_OUT_EXPO },
+                  },
+                }}
+                className="text-slate-100 text-sm sm:text-base leading-relaxed drop-shadow-[0_1px_5px_rgba(0,0,0,0.85)] font-medium max-w-lg"
+              >
                 {t("heroDescription")}
-              </p>
+              </motion.p>
 
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <button
-                  onClick={() => openQuickDonate()}
-                  className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-primary-500 to-sky-400 hover:from-primary-600 hover:to-sky-500 text-white font-extrabold text-sm shadow-xl shadow-primary-500/25 flex items-center gap-2 transition transform hover:-translate-y-0.5"
-                >
-                  <Heart className="w-4 h-4 fill-white" />
-                  <span>{t("donateNow")}</span>
-                </button>
-
+              {/* Single Clean Secondary CTA: Explore Projects */}
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.7, ease: EASE_OUT_EXPO },
+                  },
+                }}
+                className="pt-1"
+              >
                 <Link
                   href="/projects"
-                  className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/20 transition flex items-center gap-2"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs sm:text-sm border border-white/35 backdrop-blur-md transition-all shadow-md hover:border-white/55 focus:outline-none focus:ring-2 focus:ring-white/40"
                 >
-                  <span>{t("viewAllProjects")}</span>
-                  <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+                  <span>{t("exploreProjects")}</span>
+                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
                 </Link>
-              </div>
+              </motion.div>
+            </motion.div>
 
-              {/* License Pill */}
-              <div className="pt-4 flex items-center gap-2 text-xs text-slate-400">
-                <ShieldCheck className="w-4 h-4 text-primary-400 shrink-0" />
-                <span>{t("licenseInfo")}</span>
-              </div>
-            </div>
-
-            {/* Right Column: Hero Quick Donate Widget (Molham Team UX) */}
-            <div className="lg:col-span-5">
-              <div className="bg-white rounded-3xl p-6 sm:p-7 shadow-2xl text-slate-800 border border-slate-100">
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 font-bold">
-                      <Sparkles className="w-4 h-4 text-primary-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-sm text-slate-900">{t("quickDonateTitle")}</h3>
-                      <p className="text-[11px] text-slate-500">{t("quickDonationMethods")}</p>
-                    </div>
-                  </div>
-
-                  {/* Currency Picker */}
-                  <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
-                    {(["USD", "TRY", "EUR", "SAR"] as const).map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => setCurrency(c)}
-                        className={`px-2 py-1 rounded-lg transition ${
-                          currency === c ? "bg-white text-primary-600 shadow-sm" : "text-slate-600"
-                        }`}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Preset Amount Grid */}
-                <div className="pt-4 space-y-3">
-                  <span className="text-xs font-semibold text-slate-600 block">{t("selectAmount")}:</span>
-                  <div className="grid grid-cols-4 gap-2">
-                    {[10, 25, 50, 100].map((amt) => {
-                      const converted = convertUSDToCurrency(amt);
-                      const isSelected = heroAmountUSD === amt;
-                      return (
-                        <button
-                          key={amt}
-                          type="button"
-                          onClick={() => setHeroAmountUSD(amt)}
-                          className={`py-2.5 px-1 rounded-xl border text-center transition font-bold text-xs ${
-                            isSelected
-                              ? "border-primary-600 bg-primary-50 text-primary-700 ring-2 ring-primary-500/20"
-                              : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
-                          }`}
-                        >
-                          <div>{converted}</div>
-                          <div className="text-[10px] text-slate-500 font-normal">{currencySymbol}</div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Allocation Target Preview */}
-                  <div className="pt-1">
-                    <span className="text-xs font-semibold text-slate-600 block mb-1">{t("donationTarget")}:</span>
-                    <div className="bg-slate-50 rounded-xl p-2.5 border border-slate-200/80 text-xs font-medium text-slate-700 flex items-center justify-between">
-                      <span>{t("urgentGaza")}</span>
-                      <span className="text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full">
-                        {t("topPriority")}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Trigger Main Quick Donate Modal */}
-                  <button
-                    onClick={() => openQuickDonate("proj-1", heroAmountUSD)}
-                    className="w-full mt-2 py-3 px-4 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-extrabold text-xs shadow-lg shadow-primary-500/25 flex items-center justify-center gap-2 transition"
-                  >
-                    <Heart className="w-4 h-4 fill-white" />
-                    <span>
-                      {t("donateAmountPrefix")} {convertUSDToCurrency(heroAmountUSD).toLocaleString()} {currencySymbol}
-                    </span>
-                  </button>
-
-                  <p className="text-[10px] text-slate-400 text-center pt-1">
-                    {t("instantReceiptNote")}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Live Donations Ticker (Molham Style Feed) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 -mt-8 sm:-mt-12 relative z-20">
-        <div className="bg-white rounded-2xl p-4 shadow-lg border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-3 overflow-hidden">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-700 shrink-0">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{t("liveDonations")}</span>
-          </div>
+      {/* 2. Why Tawasul? Strategic Trust Journey (Wave Timeline) */}
+      <TrustJourney />
 
-          <div className="flex items-center gap-4 overflow-x-auto w-full py-1 text-xs text-slate-600 scrollbar-none">
-            {recentDonations.slice(0, 4).map((d) => (
-              <div
-                key={d.id}
-                className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60 shrink-0"
-              >
-                <span className="font-bold text-slate-800">{d.isAnonymous ? t("anonymous") : d.donorName}</span>
-                <span className="text-slate-400">{t("donated")}</span>
-                <span className="font-extrabold text-primary-600">
-                  {d.amount.toLocaleString()} {d.currency}
-                </span>
-                <span className="text-[10px] text-slate-400">
-                  ({donationMinutes[d.id] ? relativeTime.format(-donationMinutes[d.id], "minute") : t("justNow")})
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Proven Impact Stats Counter */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center space-y-1">
-            <div className="text-3xl sm:text-4xl font-black text-primary-600">+310,000</div>
-            <div className="text-xs text-slate-600 font-semibold">{t("heroStat1Label")}</div>
-          </div>
-
-          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center space-y-1">
-            <div className="text-3xl sm:text-4xl font-black text-slate-900">+120</div>
-            <div className="text-xs text-slate-600 font-semibold">{t("heroStat2Label")}</div>
-          </div>
-
-          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center space-y-1">
-            <div className="text-3xl sm:text-4xl font-black text-slate-900">5</div>
-            <div className="text-xs text-slate-600 font-semibold">{t("heroStat3Label")}</div>
-          </div>
-
-          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center space-y-1">
-            <div className="text-3xl sm:text-4xl font-black text-emerald-600">+30</div>
-            <div className="text-xs text-slate-600 font-semibold">{t("heroStat4Label")}</div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Urgent Projects Requiring Action */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      {/* 3. Priority Humanitarian Projects (Top 3 Cards) */}
+      <section className="!mt-10 sm:!mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+          variants={fadeUpVariants}
+          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4"
+        >
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full mb-2">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full mb-2">
               <Flame className="w-3.5 h-3.5" />
               <span>{t("urgentFieldResponse")}</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-brand">
               {t("urgentProjectsTitle")}
             </h2>
-            <p className="text-xs text-slate-500 mt-1 max-w-xl">
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl">
               {t("urgentProjectsSubtitle")}
             </p>
           </div>
 
           <Link
             href="/projects"
-            className="flex items-center gap-1.5 text-xs font-bold text-primary-600 hover:text-primary-700 transition"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#00A3E0] hover:text-[#0284c7] transition"
           >
             <span>{t("viewAllProjects")}</span>
             <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </Link>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={staggerContainerVariants}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+        >
           {urgentProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <motion.div key={project.id} variants={cardItemVariants} className="h-full flex flex-col">
+              <ProjectCard project={project} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
-      {/* 5. The Seven Core Sectors (مجالات العمل السبعة) */}
-      <section className="bg-slate-100/70 py-16 sm:py-24 border-y border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-12">
-          <div className="text-center space-y-2 max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              {t("sectorsTitle")}
-            </h2>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              {t("sectorsSubtitle")}
-            </p>
-          </div>
+      {/* 4. Editorial Impact Story (Editorial Photo & Verified Field Transformation) */}
+      <ImpactStorySection />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {sectorsData.map((sec, idx) => (
-              <Link
+      {/* 5. The Seven Core Sectors - Non-traditional Photo Mosaic Grid */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeUpVariants}
+          className="text-center space-y-2 max-w-2xl mx-auto"
+        >
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-brand">
+            {t("sectorsTitle")}
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+            {t("sectorsSubtitle")}
+          </p>
+        </motion.div>
+
+        {/* Mosaic Layout: Dynamic Heights and Rich Photo Cards */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.09,
+                delayChildren: 0.05,
+              },
+            },
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5"
+        >
+          {sectorsData.map((sec, idx) => {
+            // First 2 sectors take 6 columns each, others take 4 columns for organic asymmetric mosaic
+            const colSpan = idx === 0 || idx === 1 ? "lg:col-span-6 h-80" : "lg:col-span-4 h-72";
+            return (
+              <motion.div
                 key={sec.id}
-                href={`/sectors/${sec.slug}`}
-                className={`group bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 ${
-                  idx === 0 ? "sm:col-span-2 lg:col-span-1" : ""
-                }`}
+                variants={cardItemVariants}
+                className={colSpan}
               >
-                <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-2xl bg-primary-50 group-hover:bg-primary-600 group-hover:text-white text-primary-600 flex items-center justify-center transition-colors">
-                    {getSectorIcon(sec.slug)}
+                <Link
+                  href={`/sectors/${sec.slug}`}
+                  className="group relative rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block w-full h-full"
+                >
+                  <Image
+                    src={sec.coverImage}
+                    alt={sec.title.ar}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent transition-opacity duration-300 group-hover:from-slate-950" />
+
+                  <div className="absolute inset-0 p-6 sm:p-7 flex flex-col justify-between text-white z-10">
+                    <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20 group-hover:bg-[#00A3E0] group-hover:border-[#00A3E0] transition-colors">
+                      {getSectorIcon(sec.slug)}
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <h3 className="font-bold text-lg sm:text-xl text-white group-hover:text-sky-300 transition">
+                        {sec.title[language] || sec.title.ar}
+                      </h3>
+                      <p className="text-xs text-slate-200 line-clamp-2 leading-relaxed opacity-90">
+                        {sec.subtitle[language] || sec.subtitle.ar}
+                      </p>
+                      <div className="pt-2 flex items-center gap-1.5 text-xs font-semibold text-sky-300">
+                        <span>{t("exploreProjects")}</span>
+                        <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 group-hover:text-primary-600 transition">
-                      {sec.title[language] || sec.title.ar}
+                </Link>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </section>
+
+      {/* 6. Where We Work - Geographic Field Presence */}
+      <section className="bg-slate-100/70 border-y border-slate-200/60 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={fadeUpVariants}
+            className="text-center space-y-2 max-w-2xl mx-auto"
+          >
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-brand">
+              {t("regionsTitle")}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+              {t("regionsSubtitle")}
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                  delayChildren: 0.05,
+                },
+              },
+            }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5"
+          >
+            {regionsData.map((reg) => (
+              <motion.div key={reg.id} variants={cardItemVariants}>
+                <Link
+                  href={`/where-we-work/${reg.slug}`}
+                  className="group relative h-72 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block"
+                >
+                  <Image
+                    src={reg.coverImage}
+                    alt={reg.name.ar}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, 20vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent" />
+
+                  <div className="absolute inset-0 p-5 flex flex-col justify-end text-white space-y-1.5 z-10">
+                    <span className="text-3xl">{reg.flag}</span>
+                    <h3 className="font-bold text-base sm:text-lg group-hover:text-sky-300 transition whitespace-nowrap">
+                      {reg.name[language] || reg.name.ar}
                     </h3>
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-3 leading-relaxed">
-                      {sec.subtitle[language] || sec.subtitle.ar}
+                    <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed">
+                      {reg.headline[language] || reg.headline.ar}
                     </p>
                   </div>
-                </div>
-
-                <div className="pt-6 flex items-center justify-between text-xs font-semibold text-primary-600 border-t border-slate-100 mt-4">
-                  <span>{t("exploreProjects")}</span>
-                  <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
-                </div>
-              </Link>
+                </Link>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* 6. Where We Work (أين نعمل في الميدان) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-8">
-        <div className="text-center space-y-2 max-w-2xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            {t("regionsTitle")}
-          </h2>
-          <p className="text-xs text-slate-500 leading-relaxed">
-            {t("regionsSubtitle")}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {regionsData.map((reg) => (
-            <Link
-              key={reg.id}
-              href={`/where-we-work/${reg.slug}`}
-              className="group relative h-64 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block"
-            >
-              <img
-                src={reg.coverImage}
-                alt={reg.name.ar}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent" />
-
-              <div className="absolute inset-0 p-5 flex flex-col justify-end text-white space-y-1">
-                <span className="text-2xl">{reg.flag}</span>
-                <h3 className="font-bold text-base group-hover:text-primary-300 transition">
-                  {reg.name[language] || reg.name.ar}
-                </h3>
-                <span className="text-[11px] text-slate-300">
-                  +{reg.beneficiariesCount.toLocaleString()} {t("beneficiary")}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 7. Official Bank Accounts Box (IBAN with Copy) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-3xl p-8 sm:p-12 shadow-xl border border-slate-800 space-y-8">
+      {/* 7. Official Bank Accounts & Accredited Partnerships */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        {/* Bank Accounts IBAN Box */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={fadeUpVariants}
+          className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-3xl p-8 sm:p-12 shadow-xl border border-slate-800 space-y-8"
+        >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
             <div>
-              <span className="text-primary-400 text-xs font-bold block mb-1">
+              <span className="text-sky-400 text-xs font-bold block mb-1">
                 {t("directFinancialDonation")}
               </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-brand">
                 {t("officialBankAccounts")}
               </h2>
               <p className="text-xs text-slate-400 mt-1">
@@ -404,22 +495,29 @@ export default function HomePage() {
 
             <Link
               href="/bank-accounts"
-              className="py-2.5 px-5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold transition flex items-center gap-1.5"
+              className="py-2.5 px-5 rounded-xl bg-[#00A3E0] hover:bg-[#0284c7] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-[#00A3E0]/20"
             >
               <span>{t("viewAllInternationalAccounts")}</span>
               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={staggerContainerVariants}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
             {bankAccountsData.slice(0, 3).map((acc) => (
-              <div
+              <motion.div
                 key={acc.id}
+                variants={cardItemVariants}
                 className="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/80 space-y-2 text-xs"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-white">{acc.bankName}</span>
-                  <span className="text-[10px] bg-primary-500/20 text-primary-300 px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full font-bold">
                     {acc.currency}
                   </span>
                 </div>
@@ -428,7 +526,7 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => handleCopyIban(acc.id, acc.iban)}
-                    className="shrink-0 ms-2 p-1 text-primary-400 hover:text-white transition"
+                    className="shrink-0 ms-2 p-1 text-sky-400 hover:text-white transition"
                     title={t("copyIban")}
                   >
                     {copiedIbanId === acc.id ? (
@@ -438,43 +536,105 @@ export default function HomePage() {
                     )}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        </motion.div>
 
-      {/* 8. Governance & Transparency Assurance */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="bg-sky-50 rounded-3xl p-8 sm:p-12 border border-sky-100 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-primary-700 bg-white px-3 py-1 rounded-full shadow-sm">
-              <ShieldCheck className="w-4 h-4 text-primary-600" />
+        {/* Governance & Verified Partners Badge */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+          variants={fadeUpVariants}
+          className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#00A3E0] bg-sky-50 px-3 py-1 rounded-full">
+              <ShieldCheck className="w-4 h-4 text-[#00A3E0]" />
               <span>{t("officialLicenseBadge")}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 font-brand">
               {t("transparencyTitle")}
             </h3>
-            <p className="text-xs text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
               {t("transparencySubtitle")}
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
             <Link
               href="/governance"
-              className="py-3 px-6 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs shadow-md transition text-center"
+              className="py-3 px-6 rounded-2xl bg-[#00A3E0] hover:bg-[#0284c7] text-white font-bold text-xs shadow-md transition text-center"
             >
               {t("financialAuditReports")}
             </Link>
             <Link
               href="/partners"
-              className="py-3 px-6 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs border border-slate-200 transition text-center"
+              className="py-3 px-6 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200 transition text-center"
             >
               {t("partnersCta")}
             </Link>
           </div>
-        </div>
+        </motion.div>
+      </section>
+
+      {/* 8. Final Compelling Call to Action (Donate & Volunteer) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+          variants={{
+            hidden: { opacity: 0, y: 36, scale: 0.98 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              transition: {
+                duration: 0.75,
+                ease: EASE_OUT_EXPO,
+                staggerChildren: 0.14,
+                delayChildren: 0.1,
+              },
+            },
+          }}
+          className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 rounded-3xl p-10 sm:p-16 text-center text-white space-y-6 shadow-2xl border border-slate-800"
+        >
+          <motion.div
+            variants={fadeUpVariants}
+            className="max-w-2xl mx-auto space-y-3"
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-brand leading-tight">
+              {t("finalCtaTitle")}
+            </h2>
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              {t("finalCtaDesc")}
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUpVariants}
+            className="flex flex-wrap items-center justify-center gap-4 pt-2"
+          >
+            <button
+              type="button"
+              onClick={() => openQuickDonate()}
+              className="px-8 py-4 rounded-2xl bg-[#00A3E0] hover:bg-[#0284c7] text-white font-black text-sm sm:text-base shadow-xl shadow-[#00A3E0]/30 hover:shadow-[#00A3E0]/40 flex items-center gap-2.5 transition transform hover:-translate-y-0.5"
+            >
+              <Heart className="w-5 h-5 fill-white" />
+              <span>{t("donateNow")}</span>
+            </button>
+
+            <Link
+              href="/volunteer"
+              className="px-7 py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base border border-white/20 backdrop-blur-md transition flex items-center gap-2"
+            >
+              <Users className="w-4 h-4" />
+              <span>{t("joinAsVolunteer")}</span>
+            </Link>
+          </motion.div>
+        </motion.div>
       </section>
     </div>
   );

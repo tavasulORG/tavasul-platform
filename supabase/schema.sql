@@ -140,3 +140,4 @@ CREATE POLICY "Admin full access regions" ON public.regions FOR ALL USING (true)
 CREATE POLICY "Admin full access projects" ON public.projects FOR ALL USING (true);
 CREATE POLICY "Admin full access bank_accounts" ON public.bank_accounts FOR ALL USING (true);
 CREATE POLICY "Admin full access donations" ON public.donations FOR ALL USING (true);
+

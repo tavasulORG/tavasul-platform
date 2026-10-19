@@ -50,8 +50,8 @@ export const translations = {
 
     // Hero Section
     heroBadge: "نداء عاجل للإغاثة والإعمار",
-    heroTitle: "نبني الأمل، ونغيث الإنسان، ونمكّن المجتمعات المستضعفة",
-    heroDescription: "نستجيب للاحتياجات الإنسانية الطارئة ونبني التمكين المجتمعي المستدام في مناطق الأزمات بشراكات محلية ودولية معتمدة وفق أرقى معايير الحوكمة والشفافية.",
+    heroTitle: "عطاؤك اليوم، أملهم غدًا",
+    heroDescription: "ساهم معنا في دعم الأسر المحتاجة عبر مشاريع إنسانية وتنموية تصنع أثرًا مستدامًا.",
     heroStat1Label: "مستفيد تم الوصول إليهم",
     heroStat2Label: "مشروع إنساني وتنموي",
     heroStat3Label: "دول ومناطق تدخل",
@@ -107,7 +107,36 @@ export const translations = {
     transparencyTitle: "الحوكمة، الشفافية، والامتثال",
     transparencySubtitle: "نعمل برخصة قانونية معتمدة وتقارير مالية وتدقيق رسمي سنوي موثق",
     auditReports: "التقارير المالية والسنوية",
-    downloadReport: "تحميل التقرير",
+    // Trust & Verification - Why Tawasul (Wave Timeline)
+    whyTawasulTitle: "لماذا تواصل؟",
+    whyTawasulSubtitle: "ركائز مؤسسية متينة تضمن وصول عطائكم بأمان وأثر مستدام",
+    trustItem1Title: "جمعية مرخّصة رسميًا",
+    trustItem1Desc: "جمعية إنسانية تركية مرخّصة في إسطنبول برقم 34-292-049.",
+    trustItem2Title: "أكثر من 30 عامًا من الخبرة",
+    trustItem2Desc: "خبرات متراكمة لكوادر الجمعية في العمل الإنساني والتنموي.",
+    trustItem3Title: "شراكات فاعلة",
+    trustItem3Desc: "تعاون مع شركاء محليين ودوليين لخدمة المجتمعات المحتاجة.",
+    trustItem4Title: "حوكمة وشفافية",
+    trustItem4Desc: "الالتزام بالنزاهة والمساءلة وكفاءة إدارة الموارد.",
+    trustItem5Title: "أثر إنساني مستدام",
+    trustItem5Desc: "نجمع بين الإغاثة الطارئة والتمكين والتنمية طويلة المدى.",
+
+    // Editorial Impact Story
+    storyBadge: "قصة أثر ميداني مستدام",
+    storyTitle: "من العطش والمعاناة إلى شريان حياة مستدام بالطاقة الشمسية",
+    storyQuote: "«كان أطفالنا يقطعون أميالاً كل فجر لجلب مياه غير نقية، اليوم بفضل الله ثم عطائكم تتدفق المياه العذبة لمنازل القرية بالكامل.»",
+    storyContext: "من خلال مبادرات قطاع المياه والإصحاح البيئي (WASH)، أنجزت تواصل تشغيل محطات ضخ الآبار الارتوازية بالطاقة الشمسية النظيفة في المناطق الأكثر جفافاً، لتأمين مياه شرب نقية ومستمرة تحمي آلاف الأطفال من الأوبئة وتتيح لهم العودة إلى مقاعد الدراسة.",
+    storyStat1Value: "مياه نقية مستمرة",
+    storyStat1Label: "بدون انقطاع بالطاقة النظيفة",
+    storyStat2Value: "100% مستدام",
+    storyStat2Label: "إشراف وصيانة مجتمعية دورية",
+    readFullStory: "اقرأ تفاصيل الأثر والمشاريع",
+
+    // Final Strong CTA
+    finalCtaTitle: "كن شريكاً في صناعة الفارق الإنساني اليوم",
+    finalCtaDesc: "عطاؤك يمثل شريان نجاة لعائلة محتاجة، وتطوعك معنا ينقل الأمل للميدان. شاركنا الأجر في مد جسور الخير.",
+    joinAsVolunteer: "انضم لسفراء الخير والتطوع",
+    learnAboutGovernance: "الحوكمة والتقارير المالية",
 
     // Live Ticker
     liveDonations: "آخر التبرعات المسجلة:",
@@ -223,8 +252,8 @@ export const translations = {
 
     // Hero Section
     heroBadge: "Acil Yardım ve İmar Çağrısı",
-    heroTitle: "Umut İnşa Ediyor, İnsana Dokunuyor, Toplumu Güçlendiriyoruz",
-    heroDescription: "Kriz bölgelerinde acil insani ihtiyaçlara yanıt veriyor, ulusal ve uluslararası onaylı ortaklıklarla ve en yüksek şeffaflık standartlarıyla sürdürülebilir toplumsal güçlenme sağlıyoruz.",
+    heroTitle: "Bugünkü Desteğiniz, Yarınki Umutları",
+    heroDescription: "İhtiyaç sahibi aileleri, kalıcı ve sürdürülebilir etki oluşturan insani ve kalkınma projelerimizle destekleyin.",
     heroStat1Label: "Ulaşılan İhtiyaç Sahibi",
     heroStat2Label: "İnsani & Kalkınma Projesi",
     heroStat3Label: "Faaliyet Gösterilen Bölge",
@@ -280,7 +309,37 @@ export const translations = {
     transparencyTitle: "Yönetişim, Şeffaflık ve Hesap Verebilirlik",
     transparencySubtitle: "Resmi onaylı ruhsatımız, periyodik denetimlerimiz ve şeffaf yıllık mali raporlarımızla güven inşa ediyoruz",
     auditReports: "Mali ve Yıllık Raporlar",
-    downloadReport: "Raporu İndir (PDF)",
+
+    // Trust & Verification - Why Tawasul (Wave Timeline)
+    whyTawasulTitle: "Neden Tawasul?",
+    whyTawasulSubtitle: "Yardımlarınızın güvenle ve sürdürülebilir etkiyle ulaşmasını sağlayan kurumsal ilkelerimiz",
+    trustItem1Title: "Resmî İzinli ve Tescilli",
+    trustItem1Desc: "İstanbul Valiliği İl Sivil Toplumla İlişkiler izin numarası: 34-292-049.",
+    trustItem2Title: "30+ Yıllık Saha Tecrübesi",
+    trustItem2Desc: "İnsani yardım ve kalkınma alanında uzman kadrolarımızın birikimi.",
+    trustItem3Title: "Etkin ve Güçlü Ortaklıklar",
+    trustItem3Desc: "İhtiyaç sahibi topluluklara ulaşmada yerel ve uluslararası iş birlikleri.",
+    trustItem4Title: "Yönetişim ve Şeffaflık",
+    trustItem4Desc: "Dürüstlük, hesap verebilirlik ve kaynakların etkin yönetimine bağlılık.",
+    trustItem5Title: "Sürdürülebilir İnsani Etki",
+    trustItem5Desc: "Acil insani yardımı, kalıcı güçlenme ve kalkınmayla birleştiriyoruz.",
+
+    // Editorial Impact Story
+    storyBadge: "Sahadan Gerçek Etki Hikayesi",
+    storyTitle: "Susuzluktan Güneş Enerjisiyle Hayat Veren Kalıcı Su Kaynağına",
+    storyQuote: "«Çocuklarımız her sabah temiz olmayan su getirmek için kilometrelerce yürürdü. Şimdi bağışlarınız sayesinde köyümüzün evlerine kesintisiz temiz su ulaşıyor.»",
+    storyContext: "Su ve Sanitasyon (WASH) programımız kapsamında Tawasul, en kurak bölgelerde derin su kuyularını çevre dostu güneş enerjisiyle çalıştırarak binlerce çocuğu salgın hastalıklardan koruyor ve yeniden okula dönmelerini sağlıyor.",
+    storyStat1Value: "Kesintisiz Temiz Su",
+    storyStat1Label: "Güneş enerjisiyle sürdürülebilir",
+    storyStat2Value: "%100 Kalıcı",
+    storyStat2Label: "Topluluk öncülüğünde yerel bakım",
+    readFullStory: "Projeleri ve Etkiyi İncele",
+
+    // Final Strong CTA
+    finalCtaTitle: "Bugün İyilik Köprüsünün Bir Parçası Olun",
+    finalCtaDesc: "Bağışınız mazlum bir aileye can suyu olur, gönüllülüğünüz umudu sahaya taşır. Hayra ortak olun.",
+    joinAsVolunteer: "Gönüllü Elçimiz Olun",
+    learnAboutGovernance: "Yönetişim & Mali Raporlar",
 
     // Live Ticker
     liveDonations: "Son Bağışlar:",
@@ -396,8 +455,8 @@ export const translations = {
 
     // Hero Section
     heroBadge: "Urgent Relief & Rebuilding Appeal",
-    heroTitle: "Building Hope, Relieving Suffering, Empowering Vulnerable Communities",
-    heroDescription: "Responding swiftly to emergency humanitarian crises and cultivating sustainable community resilience through accredited global and local partnerships adhering to the highest standards of governance and transparency.",
+    heroTitle: "Your Giving Today, Their Hope Tomorrow",
+    heroDescription: "Join us in supporting vulnerable families through humanitarian and developmental initiatives that create lasting impact.",
     heroStat1Label: "Beneficiaries Reached",
     heroStat2Label: "Humanitarian & Development Projects",
     heroStat3Label: "Countries & Operational Hubs",
@@ -453,7 +512,37 @@ export const translations = {
     transparencyTitle: "Governance, Transparency & Accountability",
     transparencySubtitle: "Operating under Turkish NGO License 34-292-049 with certified independent audits and annual financial accountability",
     auditReports: "Financial & Annual Audit Reports",
-    downloadReport: "Download Report (PDF)",
+
+    // Trust & Verification - Why Tawasul (Wave Timeline)
+    whyTawasulTitle: "Why Tawasul?",
+    whyTawasulSubtitle: "Solid institutional pillars ensuring your giving delivers enduring, dignified impact",
+    trustItem1Title: "Officially Licensed NGO",
+    trustItem1Desc: "Turkish humanitarian NGO officially licensed in Istanbul under No. 34-292-049.",
+    trustItem2Title: "Over 30 Years Experience",
+    trustItem2Desc: "Accumulated field wisdom of our leadership in complex relief & development.",
+    trustItem3Title: "Active Global Alliances",
+    trustItem3Desc: "Strategic cooperation with local and international partners to serve communities.",
+    trustItem4Title: "Governance & Transparency",
+    trustItem4Desc: "Unyielding commitment to integrity, financial audits, and stewardship.",
+    trustItem5Title: "Sustainable Human Impact",
+    trustItem5Desc: "Bridging urgent relief with long-term resilience and human empowerment.",
+
+    // Editorial Impact Story
+    storyBadge: "Frontline Sustainable Impact Story",
+    storyTitle: "From Arduous Drought to Clean, Solar-Powered Living Water",
+    storyQuote: "“Our children used to walk miles at dawn just to fetch contaminated water. Today, thanks to your generosity, pure water flows continuously into our village homes.”",
+    storyContext: "Through our WASH sector initiatives, Tawasul equips deep water wells with solar pumping arrays across parched zones, protecting thousands of families from waterborne disease and enabling children to return to school.",
+    storyStat1Value: "Continuous Clean Water",
+    storyStat1Label: "Eco-friendly solar powered",
+    storyStat2Value: "100% Sustainable",
+    storyStat2Label: "Community-led stewardship",
+    readFullStory: "Explore Projects & Field Impact",
+
+    // Final Strong CTA
+    finalCtaTitle: "Be a Catalyst for Human Dignity Today",
+    finalCtaDesc: "Your donation provides an immediate lifeline, and your volunteering brings enduring hope to the field. Join us in bridging compassionate giving.",
+    joinAsVolunteer: "Join as Goodwill Ambassador",
+    learnAboutGovernance: "Governance & Audit Reports",
 
     // Live Ticker
     liveDonations: "Recent Donations:",

@@ -220,7 +220,7 @@ export const sectorsData: Sector[] = [
     id: "sec-6",
     slug: "wash",
     iconName: "Droplets",
-    coverImage: "https://images.unsplash.com/photo-1541888946425-d0fbb186f5f7?auto=format&fit=crop&w=1200&q=80",
+    coverImage: "/images/impact-solar-water.jpg",
     title: {
       ar: "المياه والإصحاح البيئي (WASH)",
       tr: "Su ve Çevre Sağlığı (WASH)",
