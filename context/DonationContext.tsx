@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Currency, DonationRecord, Project } from "@/types";
 import { initialProjects } from "@/data/projects";
+import { supabase } from "@/lib/supabase";
 import confetti from "canvas-confetti";
 
 interface DonationContextType {
@@ -125,6 +126,81 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
   const [recentDonations, setRecentDonations] = useState<DonationRecord[]>(INITIAL_DONATIONS);
   const [activeReceipt, setActiveReceipt] = useState<DonationRecord | null>(null);
 
+  // 1. Fetch Projects from Supabase
+  useEffect(() => {
+    async function loadProjects() {
+      try {
+        const { data, error } = await supabase
+          .from("projects")
+          .select("*")
+          .order("goal_amount", { ascending: false });
+
+        if (data && data.length > 0 && !error) {
+          const mapped: Project[] = data.map((row: any) => ({
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            summary: row.summary,
+            description: row.description,
+            sectorSlug: row.sector_slug,
+            countrySlug: row.country_slug,
+            countryName: row.country_name,
+            targetGroups: row.target_groups || [],
+            beneficiariesCount: Number(row.beneficiaries_count || 0),
+            goalAmount: Number(row.goal_amount || 0),
+            raisedAmount: Number(row.raised_amount || 0),
+            donorsCount: Number(row.donors_count || 0),
+            status: row.status,
+            featured: row.featured,
+            coverImage: row.cover_image,
+            gallery: row.gallery || [],
+            updates: row.updates || [],
+            createdAt: row.created_at,
+          }));
+          setProjects(mapped);
+        }
+      } catch (err) {
+        console.warn("Using local initial projects fallback:", err);
+      }
+    }
+
+    // 2. Fetch Recent Donations from Supabase
+    async function loadDonations() {
+      try {
+        const { data, error } = await supabase
+          .from("donations")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        if (data && data.length > 0 && !error) {
+          const mapped: DonationRecord[] = data.map((d: any) => ({
+            id: d.id,
+            receiptNumber: d.receipt_number,
+            donorName: d.donor_name,
+            donorEmail: d.donor_email,
+            isAnonymous: d.is_anonymous,
+            amount: Number(d.amount),
+            currency: d.currency,
+            amountUSD: Number(d.amount_usd),
+            projectId: d.project_id,
+            projectTitle: d.project_title,
+            sectorSlug: d.sector_slug,
+            paymentMethod: d.payment_method,
+            status: d.status,
+            timestamp: "حديثاً",
+          }));
+          setRecentDonations(mapped);
+        }
+      } catch (err) {
+        console.warn("Using local initial donations fallback:", err);
+      }
+    }
+
+    loadProjects();
+    loadDonations();
+  }, []);
+
   useEffect(() => {
     const saved = localStorage.getItem("tawasul_currency") as Currency;
     if (saved && RATES[saved]) {
@@ -221,6 +297,42 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
 
     setRecentDonations((prev) => [newRecord, ...prev.slice(0, 9)]);
     setActiveReceipt(newRecord);
+
+    // Save donation to Supabase
+    try {
+      await supabase.from("donations").insert({
+        id: newRecord.id,
+        receipt_number: newRecord.receiptNumber,
+        donor_name: newRecord.donorName,
+        donor_email: newRecord.donorEmail,
+        donor_phone: data.donorPhone,
+        is_anonymous: newRecord.isAnonymous,
+        amount: newRecord.amount,
+        currency: newRecord.currency,
+        amount_usd: newRecord.amountUSD,
+        project_id: newRecord.projectId,
+        project_title: newRecord.projectTitle,
+        sector_slug: newRecord.sectorSlug,
+        payment_method: newRecord.paymentMethod,
+        status: newRecord.status,
+        created_at: new Date().toISOString(),
+      });
+
+      // Update project raisedAmount in Supabase if exists
+      if (data.projectId && matchedProject) {
+        const updatedRaised = Math.min(matchedProject.goalAmount, matchedProject.raisedAmount + Math.round(amountInUSD));
+        await supabase
+          .from("projects")
+          .update({
+            raised_amount: updatedRaised,
+            donors_count: matchedProject.donorsCount + 1,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", data.projectId);
+      }
+    } catch (dbErr) {
+      console.warn("Could not sync donation to Supabase:", dbErr);
+    }
 
     // Fire festive celebratory confetti
     try {

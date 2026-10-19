@@ -95,12 +95,45 @@ export default function AdminDashboardPage() {
     setIsAddModalOpen(false);
     setNewTitleAr("");
     setNewTitleEn("");
+
+    // Persist to Supabase
+    import("@/lib/supabase").then(({ supabase }) => {
+      supabase.from("projects").insert({
+        id: newProj.id,
+        slug: newProj.slug,
+        title: newProj.title,
+        summary: newProj.summary,
+        description: newProj.description,
+        sector_slug: newProj.sectorSlug,
+        country_slug: newProj.countrySlug,
+        country_name: newProj.countryName,
+        target_groups: newProj.targetGroups,
+        beneficiaries_count: newProj.beneficiariesCount,
+        goal_amount: newProj.goalAmount,
+        raised_amount: 0,
+        donors_count: 0,
+        status: newProj.status,
+        featured: newProj.featured,
+        cover_image: newProj.coverImage,
+        gallery: newProj.gallery,
+        updates: newProj.updates,
+        created_at: new Date().toISOString(),
+      }).then(({ error }) => {
+        if (error) console.warn("Supabase sync warning:", error.message);
+      });
+    });
+
     alert("تمت إضافة المشروع الجديد بنجاح إلى قاعدة البيانات!");
   };
 
   const handleDeleteProject = (id: string) => {
     if (confirm("هل أنت متأكد من رغبتك بحذف هذا المشروع؟")) {
       setLocalProjects(localProjects.filter((p) => p.id !== id));
+      import("@/lib/supabase").then(({ supabase }) => {
+        supabase.from("projects").delete().eq("id", id).then(({ error }) => {
+          if (error) console.warn("Supabase delete warning:", error.message);
+        });
+      });
     }
   };
 
