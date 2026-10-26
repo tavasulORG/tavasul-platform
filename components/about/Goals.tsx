@@ -2,11 +2,12 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { aboutData } from "@/data/about";
+import { useContent } from "@/context/ContentContext";
 import { PaleCircle, SectionHeading, fadeUp, stagger, viewportOnce } from "./shared";
 
 export function Goals() {
   const { language, t } = useLanguage();
+  const { about: aboutData } = useContent();
 
   return (
     <section id="goals" className="relative overflow-hidden bg-white py-16 sm:py-24 scroll-mt-32">

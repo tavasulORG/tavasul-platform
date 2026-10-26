@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Project } from "@/types";
-import { sectorsData } from "@/data/sectors";
+import { useContent } from "@/context/ContentContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDonation } from "@/context/DonationContext";
 import {
@@ -33,7 +34,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const summary = project.summary[language] || project.summary.ar;
   const country = project.countryName[language] || project.countryName.ar;
 
-  const sector = sectorsData.find((s) => s.slug === project.sectorSlug);
+  const { sectors } = useContent();
+  const sector = sectors.find((s) => s.slug === project.sectorSlug);
   const sectorTitle = sector
     ? sector.title[language] || sector.title.ar
     : null;
@@ -64,23 +66,25 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div>
         {/* Cover Image & Badges */}
         <div className="relative h-52 w-full overflow-hidden bg-slate-100">
-          <img
+          <Image
             src={project.coverImage}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
           {/* Top Badges */}
           <div className="absolute top-3 left-3 rtl:left-auto rtl:right-3 flex items-center gap-2">
             {project.status === "urgent" && (
-              <span className="flex items-center gap-1 bg-red-600/90 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md animate-pulse">
+              <span className="flex items-center gap-1 bg-red-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md animate-pulse">
                 <Flame className="w-3.5 h-3.5" />
                 <span>{t("urgentBadge")}</span>
               </span>
             )}
             {project.status === "completed" && (
-              <span className="flex items-center gap-1 bg-emerald-600/90 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md">
+              <span className="flex items-center gap-1 bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md">
                 <CheckCircle className="w-3.5 h-3.5" />
                 <span>{t("completedBadge")}</span>
               </span>
@@ -88,7 +92,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </div>
 
           {/* Country Badge */}
-          <div className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 flex items-center gap-1 bg-black/40 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-full">
+          <div className="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 flex items-center gap-1 bg-black/55 text-white text-xs px-2.5 py-1 rounded-full">
             <MapPin className="w-3.5 h-3.5 text-sky-300" />
             <span>{country}</span>
           </div>

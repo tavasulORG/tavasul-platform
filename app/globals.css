@@ -67,15 +67,36 @@
   animation: fadeIn 0.25s ease-out forwards;
 }
 
-@keyframes slideInRight {
+@keyframes scaleIn {
   from {
-    transform: translateX(100%);
+    opacity: 0;
+    transform: scale(0.96);
   }
   to {
-    transform: translateX(0);
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-.animate-slideInRight {
-  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-scaleIn {
+  animation: scaleIn 0.25s ease-out forwards;
+}
+
+/* Impact-story auto-advance ring: starts at the dash offset set in the markup and empties to 0.
+   Duration is set inline from AUTO_ADVANCE_MS; the element is re-keyed to restart. */
+@keyframes ringFill {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.impact-ring-fill {
+  animation: ringFill linear forwards;
+}
+
+/* Anchor links (#sector ids on /sectors, #section ids on /about) glide instead of jumping. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

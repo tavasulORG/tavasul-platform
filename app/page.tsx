@@ -6,12 +6,10 @@ import Image from "next/image";
 import { motion, type Variants } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDonation } from "@/context/DonationContext";
-import { sectorsData } from "@/data/sectors";
-import { regionsData } from "@/data/regions";
+import { useContent } from "@/context/ContentContext";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { TrustJourney } from "@/components/home/TrustJourney";
 import { ImpactStorySection } from "@/components/home/ImpactStorySection";
-import { bankAccountsData } from "@/data/bankAccounts";
 import {
   Heart,
   ArrowRight,
@@ -82,6 +80,7 @@ export default function HomePage() {
     recentDonations,
     formatAmount,
   } = useDonation();
+  const { sectors, regions, bankAccounts, settings } = useContent();
 
   const [copiedIbanId, setCopiedIbanId] = useState<string | null>(null);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
@@ -184,11 +183,12 @@ export default function HomePage() {
             loop
             playsInline
             preload="auto"
+            poster={settings.heroPoster}
             disablePictureInPicture
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover object-center"
           >
-            <source src="/videos/hero-tawasul.mp4" type="video/mp4" />
+            <source src={settings.heroVideo} type="video/mp4" />
           </video>
           {/* Gradient overlay keeps the hero text readable over the video. */}
           {/* Mobile: short bottom fade behind the full-width text block only. */}
@@ -361,7 +361,7 @@ export default function HomePage() {
           }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5"
         >
-          {sectorsData.map((sec, idx) => {
+          {sectors.map((sec, idx) => {
             // First 2 sectors take 6 columns each, others take 4 columns for organic asymmetric mosaic
             const colSpan = idx === 0 || idx === 1 ? "lg:col-span-6 h-80" : "lg:col-span-4 h-72";
             return (
@@ -442,7 +442,7 @@ export default function HomePage() {
             }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5"
           >
-            {regionsData.map((reg) => (
+            {regions.map((reg) => (
               <motion.div key={reg.id} variants={cardItemVariants}>
                 <Link
                   href={`/where-we-work#${reg.slug}`}
@@ -492,7 +492,7 @@ export default function HomePage() {
                 {t("officialBankAccounts")}
               </h2>
               <p className="text-xs text-brand-muted mt-1">
-                {t("officialAccountName")}: <strong className="text-brand-ink">TAVASUL YARDIM VE KALKINMA DERNEĞİ</strong>
+                {t("officialAccountName")}: <strong className="text-brand-ink">{bankAccounts[0]?.accountHolder ?? "TAVASUL YARDIM VE KALKINMA DERNEĞİ"}</strong>
               </p>
             </div>
 
@@ -512,7 +512,7 @@ export default function HomePage() {
             variants={staggerContainerVariants}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
           >
-            {bankAccountsData.slice(0, 3).map((acc) => (
+            {bankAccounts.slice(0, 3).map((acc) => (
               <motion.div
                 key={acc.id}
                 variants={cardItemVariants}

@@ -2,9 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
-import { sectorsData } from "@/data/sectors";
-import { regionsData } from "@/data/regions";
+import { useContent } from "@/context/ContentContext";
 import {
   ShieldCheck,
   MapPin,
@@ -16,6 +16,11 @@ import {
 
 export function Footer() {
   const { language, t } = useLanguage();
+  const { sectors, regions, settings } = useContent();
+  const pathname = usePathname();
+
+  // The admin panel has its own shell.
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <footer className="bg-gradient-to-b from-brand-ink to-brand-dark text-slate-300 text-xs">
@@ -54,7 +59,7 @@ export function Footer() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center gap-3">
             <img
-              src="/images/logo.jpg"
+              src={settings.logo}
               alt="Tawasul"
               className="h-10 w-auto object-contain rounded-lg bg-white p-1"
             />
@@ -77,11 +82,11 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-3.5 h-3.5 text-primary-400 shrink-0" />
-              <span dir="ltr">+90 534 000 0000</span>
+              <span dir="ltr">{settings.phone}</span>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-3.5 h-3.5 text-primary-400 shrink-0" />
-              <span>info@tawasul-tr.org</span>
+              <span>{settings.email}</span>
             </div>
           </div>
         </div>
@@ -92,7 +97,7 @@ export function Footer() {
             {t("navSectors")}
           </h4>
           <ul className="space-y-2">
-            {sectorsData.map((sec) => (
+            {sectors.map((sec) => (
               <li key={sec.id}>
                 <Link
                   href={`/sectors#${sec.slug}`}
@@ -111,7 +116,7 @@ export function Footer() {
             {t("navWhereWeWork")}
           </h4>
           <ul className="space-y-2">
-            {regionsData.map((reg) => (
+            {regions.map((reg) => (
               <li key={reg.id}>
                 <Link
                   href={`/where-we-work#${reg.slug}`}

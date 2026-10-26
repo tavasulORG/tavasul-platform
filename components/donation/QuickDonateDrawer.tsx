@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useDonation } from "@/context/DonationContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { Currency } from "@/types";
-import { bankAccountsData } from "@/data/bankAccounts";
+import { useContent } from "@/context/ContentContext";
 import { 
   X, 
   CreditCard, 
@@ -14,8 +15,18 @@ import {
   Copy, 
   Check, 
   Sparkles, 
-  Loader2 
+  Loader2,
+  FlaskConical,
 } from "lucide-react";
+
+function CardBrandLogos({ className = "" }: { className?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-1 ${className}`}>
+      <Image src="/images/payments/visa.svg" alt="Visa" width={36} height={24} unoptimized className="h-5 w-auto rounded border border-slate-200 bg-white" />
+      <Image src="/images/payments/mastercard.svg" alt="Mastercard" width={36} height={24} unoptimized className="h-5 w-auto rounded border border-slate-200 bg-white" />
+    </span>
+  );
+}
 
 export function QuickDonateDrawer() {
   const {
@@ -33,6 +44,8 @@ export function QuickDonateDrawer() {
   } = useDonation();
 
   const { t, language } = useLanguage();
+  const { bankAccounts: bankAccountsData, settings } = useContent();
+  const DEMO_PAYMENT_MODE = settings.demoPaymentMode;
 
   // Tab: 'card' or 'bank'
   const [activeTab, setActiveTab] = useState<"card" | "bank">("card");
@@ -109,18 +122,28 @@ export function QuickDonateDrawer() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-opacity">
-      <div 
-        className="w-full max-w-lg bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto animate-slideInRight"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-900/70 animate-fadeIn">
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="w-full max-w-lg max-h-[92vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-scaleIn"
       >
         {/* Drawer Header */}
-        <div className="p-5 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
+        <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600">
               <Heart className="w-5 h-5 fill-primary-600" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900">{t("quickDonateTitle")}</h2>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <h2 className="text-base font-bold text-slate-900">{t("quickDonateTitle")}</h2>
+                {DEMO_PAYMENT_MODE && (
+                  <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-800">
+                    <FlaskConical className="w-3 h-3" />
+                    {t("demoModeBadge")}
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-slate-500">{t("turkishLicenseShort")}</p>
             </div>
           </div>
@@ -133,7 +156,21 @@ export function QuickDonateDrawer() {
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-5 space-y-6 flex-1">
+        <form onSubmit={handleSubmit} className="p-5 space-y-6 flex-1 overflow-y-auto">
+          {/* Demo Mode Notice */}
+          {DEMO_PAYMENT_MODE && (
+            <div
+              role="status"
+              className="flex items-start gap-2.5 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900"
+            >
+              <FlaskConical className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
+              <div>
+                <div className="font-bold">{t("demoModeBadge")}</div>
+                <p className="mt-0.5 leading-relaxed text-amber-800">{t("demoPaymentNote")}</p>
+              </div>
+            </div>
+          )}
+
           {/* Currency Switcher */}
           <div className="flex items-center justify-between bg-slate-50 p-2 rounded-2xl border border-slate-200/70">
             <span className="text-xs font-semibold text-slate-600 px-2">{t("donationCurrency")}:</span>
@@ -272,7 +309,8 @@ export function QuickDonateDrawer() {
                 }`}
               >
                 <CreditCard className="w-4 h-4" />
-                <span>{t("creditCard")}</span>
+                <span className="whitespace-nowrap">{t("creditCard")}</span>
+                <CardBrandLogos className="hidden sm:inline-flex" />
               </button>
               <button
                 type="button"
@@ -292,9 +330,10 @@ export function QuickDonateDrawer() {
             {activeTab === "card" && (
               <div className="space-y-3 bg-slate-50/70 p-4 rounded-2xl border border-slate-200/60">
                 <div>
-                  <label className="text-[11px] font-bold text-slate-600 block mb-1">
-                    {t("cardNumber")}
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[11px] font-bold text-slate-600 block">{t("cardNumber")}</label>
+                    <CardBrandLogos />
+                  </div>
                   <input
                     type="text"
                     placeholder="4500 •••• •••• 1234"
@@ -436,6 +475,11 @@ export function QuickDonateDrawer() {
                 <span>
                   {t("donateAmountPrefix")} {currentAmountInCurrency.toLocaleString()} {currencySymbol}
                 </span>
+                {DEMO_PAYMENT_MODE && (
+                  <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold">
+                    {t("demoModeBadge")}
+                  </span>
+                )}
               </>
             )}
           </button>

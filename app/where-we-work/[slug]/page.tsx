@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
-import { regionsData } from "@/data/regions";
 
-/** The former per-country pages now live as sections of the unified /where-we-work page. */
+/**
+ * The former per-country pages now live as sections of the unified /where-we-work page.
+ * Regions are managed in the admin, so any slug redirects to its anchor; an unknown
+ * anchor simply lands at the top of the page.
+ */
 export default async function RegionRedirectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const exists = regionsData.some((region) => region.slug === slug);
-  redirect(exists ? `/where-we-work#${slug}` : "/where-we-work");
+  redirect(/^[a-z0-9-]+$/i.test(slug) ? `/where-we-work#${slug}` : "/where-we-work");
 }

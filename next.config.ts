@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "molhamteam.com",
       },
+      // Files uploaded from the admin panel live in Supabase Storage.
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+      },
     ],
   },
   // The former "About" sub-pages are now sections of the unified /about page.

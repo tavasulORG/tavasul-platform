@@ -1,270 +1,92 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { useContent } from "@/context/ContentContext";
 import {
+  AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Baby,
+  Droplets,
+  GraduationCap,
+  HandHeart,
+  HeartPulse,
+  Home,
+  Stethoscope,
+  Tent,
+  TrendingUp,
+  Users,
+  Wheat,
+  LucideIcon,
+} from "lucide-react";
+
+/** Icons available for a story's iconName (chosen in the admin). */
+const STORY_ICONS: Record<string, LucideIcon> = {
   Droplets,
   GraduationCap,
   HeartPulse,
   Users,
-  LucideIcon,
-} from "lucide-react";
-
-interface LocalizedText {
-  ar: string;
-  tr: string;
-  en: string;
-}
-
-interface ImpactAccordionCard {
-  id: string;
-  projectSlug: string;
-  icon: LucideIcon;
-  title: LocalizedText;
-  description: LocalizedText;
-  image: string;
-  gaugeHeader: LocalizedText;
-  gaugeValue: LocalizedText;
-  gaugeSub: LocalizedText;
-  gaugeProgress: number;
-  gaugeFootnote: LocalizedText;
-}
-
-const ACCORDION_STORIES: ImpactAccordionCard[] = [
-  {
-    id: "story-wash",
-    projectSlug: "yemen-solar-water-wells",
-    icon: Droplets,
-    title: {
-      ar: "سقيا الأمل بالطاقة الشمسية",
-      tr: "Güneş Enerjili Su Kuyuları",
-      en: "Solar Water Boreholes",
-    },
-    description: {
-      ar: "حفر وتشغيل محطات الآبار الارتوازية بالطاقة الشمسية النظيفة لتأمين مياه شرب نقية ومستمرة لقرى اليمن.",
-      tr: "Kurak köylerde güneş enerjili derin su kuyuları açarak binlerce çocuğa kesintisiz temiz içme suyu sağlıyoruz.",
-      en: "Operating solar-powered deep artesian wells across drought-stricken villages to deliver pure drinking water.",
-    },
-    image: "/images/impact-solar-water.jpg",
-    gaugeHeader: {
-      ar: "مؤشر الأثر والاستدامة",
-      tr: "Sürdürülebilirlik Skoru",
-      en: "Sustainability Index",
-    },
-    gaugeValue: {
-      ar: "+32K",
-      tr: "+32B",
-      en: "32K+",
-    },
-    gaugeSub: {
-      ar: "مستفيد يومياً",
-      tr: "Günlük faydalanıcı",
-      en: "Daily beneficiaries",
-    },
-    gaugeProgress: 0.85,
-    gaugeFootnote: {
-      ar: "مياه نقية مستمرة بالطاقة الشمسية 100% وبإشراف أهالي القرية.",
-      tr: "Yerel köy komitelerinin denetiminde %100 güneş enerjisiyle çalışır.",
-      en: "100% solar-powered operation managed by local village committees.",
-    },
-  },
-  {
-    id: "story-education",
-    projectSlug: "turkey-hatay-orphan-sponsorship",
-    icon: GraduationCap,
-    title: {
-      ar: "تعليم وكفالة الأيتام",
-      tr: "Yetim Eğitim ve Hamiliği",
-      en: "Orphan Care & Schooling",
-    },
-    description: {
-      ar: "رعاية تعليمية ومعيشية شاملة تضمن عودة الأطفال الأيتام إلى مقاعد الدراسة وبناء مستقبلهم بأمان.",
-      tr: "Yetim çocukların eğitim hayatından kopmaması için düzenli burs, kırtasiye ve sosyal destek sağlıyoruz.",
-      en: "Holistic educational and living sponsorships keeping orphaned children thriving in safe classrooms.",
-    },
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
-    gaugeHeader: {
-      ar: "مؤشر الاستمرار التعليمي",
-      tr: "Eğitime Devam Oranı",
-      en: "School Retention Score",
-    },
-    gaugeValue: {
-      ar: "98%",
-      tr: "%98",
-      en: "98%",
-    },
-    gaugeSub: {
-      ar: "انتظام دراسي",
-      tr: "Okula devamlılık",
-      en: "Student retention",
-    },
-    gaugeProgress: 0.92,
-    gaugeFootnote: {
-      ar: "كفالة شهرية تغطي الرسوم الدراسية والغذاء والدعم النفسي.",
-      tr: "Eğitim, beslenme ve psikososyal desteği kapsayan düzenli hamilik.",
-      en: "Monthly support covering tuition, nutrition, and psychosocial care.",
-    },
-  },
-  {
-    id: "story-health",
-    projectSlug: "africa-cataract-sight-surgery",
-    icon: HeartPulse,
-    title: {
-      ar: "مخيمات النور الطبية",
-      tr: "Gezici Sağlık Kampları",
-      en: "Mobile Surgical Camps",
-    },
-    description: {
-      ar: "قوافل جراحية متخصصة لإجراء عمليات العيون وإزالة المياه البيضاء وتوفير الدواء مجاناً في المناطق النائية.",
-      tr: "Kırsal bölgelerde ücretsiz katarakt ameliyatları ve sağlık taramaları gerçekleştirerek hastaları ışığa kavuşturuyoruz.",
-      en: "Specialist mobile surgeons performing free cataract operations and medical care in remote villages.",
-    },
-    image:
-      "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80",
-    gaugeHeader: {
-      ar: "مؤشر التدخل الجراحي",
-      tr: "Cerrahi Başarı Skoru",
-      en: "Surgical Impact Score",
-    },
-    gaugeValue: {
-      ar: "1,000",
-      tr: "1.000",
-      en: "1,000",
-    },
-    gaugeSub: {
-      ar: "عملية استعادة بصر",
-      tr: "Başarılı ameliyat",
-      en: "Sight surgeries",
-    },
-    gaugeProgress: 0.9,
-    gaugeFootnote: {
-      ar: "فحوصات، عمليات جراحية، وزراعة عدسات مجانية بالكامل.",
-      tr: "Muayene, ameliyat ve mercek nakli tamamen ücretsiz sağlanır.",
-      en: "Full screening, lens surgery, and post-op medication free of charge.",
-    },
-  },
-  {
-    id: "story-relief",
-    projectSlug: "gaza-urgent-warmth-food",
-    icon: Users,
-    title: {
-      ar: "الإغاثة والأمن الغذائي",
-      tr: "Acil İnsani Yardım",
-      en: "Frontline Food Relief",
-    },
-    description: {
-      ar: "استجابة ميدانية فورية لتأمين الوجبات الساخنة والسلال الغذائية ومستلزمات الإيواء للأسر النازحة.",
-      tr: "Kriz bölgelerindeki ailelere günlük sıcak yemek, gıda kolileri ve acil barınma desteği ulaştırıyoruz.",
-      en: "Rapid frontline response delivering daily hot meals, food parcels, and shelter kits to displaced families.",
-    },
-    image:
-      "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80",
-    gaugeHeader: {
-      ar: "مؤشر الوصول الميداني",
-      tr: "Sahaya Ulaşım Oranı",
-      en: "Direct Field Reach",
-    },
-    gaugeValue: {
-      ar: "+45K",
-      tr: "+45B",
-      en: "45K+",
-    },
-    gaugeSub: {
-      ar: "مستفيد مباشر",
-      tr: "Doğrudan faydalanıcı",
-      en: "Direct beneficiaries",
-    },
-    gaugeProgress: 0.88,
-    gaugeFootnote: {
-      ar: "توزيع ميداني مباشر يضمن وصول الدعم لمستحقيه بأمان.",
-      tr: "Yardımların ihtiyaç sahiplerine doğrudan ve güvenle teslimi.",
-      en: "Verified frontline distribution reaching vulnerable families directly.",
-    },
-  },
-];
+  Tent,
+  Home,
+  TrendingUp,
+  AlertTriangle,
+  HandHeart,
+  Stethoscope,
+  Wheat,
+  Baby,
+};
 
 const AUTO_ADVANCE_MS = 5500; // 5.5 seconds per story
 
 export function ImpactStorySection() {
   const { language, dir, t } = useLanguage();
+  const { home } = useContent();
+  const stories = home.impactStories;
+  const storyCount = stories.length;
   const [activeIndex, setActiveIndex] = useState(0);
-  // fillProgress: 0 to 100 representing the arrow fill percentage
-  const [fillProgress, setFillProgress] = useState(0);
-  const startTimeRef = useRef<number | null>(null);
-  const rafRef = useRef<number | null>(null);
+  // Bumped whenever the auto-advance cycle (re)starts so the CSS ring animation restarts from zero.
+  const [cycle, setCycle] = useState(0);
 
   const isRtl = dir === "rtl";
 
   const goToSlide = useCallback((nextIdx: number) => {
     setActiveIndex(nextIdx);
-    setFillProgress(0);
-    startTimeRef.current = performance.now();
+    setCycle((c) => c + 1);
   }, []);
 
   const handlePrev = useCallback(() => {
-    setActiveIndex((prev) =>
-      prev === 0 ? ACCORDION_STORIES.length - 1 : prev - 1
-    );
-    setFillProgress(0);
-    startTimeRef.current = performance.now();
-  }, []);
+    setActiveIndex((prev) => (prev === 0 ? storyCount - 1 : prev - 1));
+    setCycle((c) => c + 1);
+  }, [storyCount]);
 
   const handleNext = useCallback(() => {
-    setActiveIndex((prev) =>
-      prev === ACCORDION_STORIES.length - 1 ? 0 : prev + 1
-    );
-    setFillProgress(0);
-    startTimeRef.current = performance.now();
-  }, []);
+    setActiveIndex((prev) => (prev === storyCount - 1 ? 0 : prev + 1));
+    setCycle((c) => c + 1);
+  }, [storyCount]);
 
-  // Smooth 60fps auto-advance timer that fills the arrow from 0% to 100%
+  // One timer per story. The progress ring is a CSS animation (see .impact-ring-fill in globals.css),
+  // so nothing re-renders between advances.
   useEffect(() => {
-    startTimeRef.current = performance.now();
+    const timer = setTimeout(() => {
+      setActiveIndex((prev) => (prev + 1) % Math.max(storyCount, 1));
+      setCycle((c) => c + 1);
+    }, AUTO_ADVANCE_MS);
+    return () => clearTimeout(timer);
+  }, [activeIndex, cycle, storyCount]);
 
-    const tick = (now: number) => {
-      if (startTimeRef.current === null) {
-        startTimeRef.current = now;
-      }
-      const elapsed = now - startTimeRef.current;
-      const pct = Math.min((elapsed / AUTO_ADVANCE_MS) * 100, 100);
-      setFillProgress(pct);
+  // Stories edited in the admin may shrink the list while a later index is active.
+  const safeIndex = Math.min(activeIndex, Math.max(storyCount - 1, 0));
 
-      if (elapsed >= AUTO_ADVANCE_MS) {
-        setActiveIndex((prev) => (prev + 1) % ACCORDION_STORIES.length);
-        startTimeRef.current = now;
-        setFillProgress(0);
-      }
-
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-
-    return () => {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-      }
-    };
-  }, [activeIndex]);
-
-  const sectionHeadline = {
-    ar: "مشاريع ميدانية بإشراف هندسي وإنساني متكامل. نرصد الاحتياج الفعلي، ونتتبّع جودة التنفيذ، ونصنع أثراً مستداماً يغيّر حياة المجتمعات.",
-    tr: "Uzman saha ekiplerimizle tasarlanan kalıcı çözümler. İhtiyaçları tespit ediyor, süreci şeffaflıkla takip ediyor ve sürdürülebilir etki üretiyoruz.",
-    en: "Designed by frontline humanitarian specialists. We screen critical field needs, track impact over time, and build sustainable community lifelines.",
-  };
+  const sectionHeadline = home.impactHeadline;
 
   // Semi-circle arc geometry (R = 44, π * 44 ≈ 138.2)
   const ARC_LENGTH = 138.2;
   // Circular ring circumference for the floating arrow timer (r = 19 => 2 * π * 19 ≈ 119.38)
   const RING_CIRCUMFERENCE = 119.38;
-  const ringDashOffset =
-    RING_CIRCUMFERENCE * (1 - Math.min(fillProgress, 100) / 100);
 
   return (
     <section className="py-10 sm:py-14">
@@ -360,9 +182,9 @@ export function ImpactStorySection() {
             }}
             className="flex flex-col lg:flex-row gap-3 sm:gap-3.5 lg:h-[440px]"
           >
-            {ACCORDION_STORIES.map((card, idx) => {
-              const isActive = idx === activeIndex;
-              const Icon = card.icon;
+            {stories.map((card, idx) => {
+              const isActive = idx === safeIndex;
+              const Icon = STORY_ICONS[card.iconName] ?? Users;
               const dashOffset = ARC_LENGTH * (1 - card.gaugeProgress);
 
               return (
@@ -436,7 +258,7 @@ export function ImpactStorySection() {
                             handleNext();
                           }}
                           aria-label="Next story"
-                          className="relative w-11 h-11 rounded-full bg-white/90 hover:bg-white text-brand-ink backdrop-blur-md flex items-center justify-center cursor-pointer transition-colors shadow-md group/arrow"
+                          className="relative w-11 h-11 rounded-full bg-white hover:bg-white text-brand-ink flex items-center justify-center cursor-pointer transition-colors shadow-md group/arrow"
                         >
                           {/* SVG Circular Progress Ring matching top style */}
                           <svg
@@ -452,6 +274,7 @@ export function ImpactStorySection() {
                               strokeWidth="2"
                             />
                             <circle
+                              key={`${activeIndex}-${cycle}`}
                               cx="22"
                               cy="22"
                               r="19"
@@ -460,7 +283,9 @@ export function ImpactStorySection() {
                               strokeWidth="2.4"
                               strokeLinecap="round"
                               strokeDasharray={RING_CIRCUMFERENCE}
-                              strokeDashoffset={ringDashOffset}
+                              strokeDashoffset={RING_CIRCUMFERENCE}
+                              className="impact-ring-fill"
+                              style={{ animationDuration: `${AUTO_ADVANCE_MS}ms` }}
                             />
                           </svg>
 

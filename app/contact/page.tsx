@@ -1,8 +1,23 @@
+import { ContactHero } from "@/components/contact/ContactHero";
+import { ContactForm } from "@/components/contact/ContactForm";
+import { ContactDepartments } from "@/components/contact/ContactDepartments";
+import { ContactFaq } from "@/components/contact/ContactFaq";
+import { ContactOffice } from "@/components/contact/ContactOffice";
+
 /**
- * Page intentionally left empty: the previous design was removed on request
- * (2026-10-26) so it can be rebuilt from scratch. The site header and footer
- * come from app/layout.tsx.
+ * Contact page: a light hero with four live channels, the message form (#form, stored in the
+ * contact_messages table) beside a "what happens next" panel, departments that preselect the
+ * form topic, a short FAQ, and the office address with opening hours.
+ * Copy lives in the contact* keys of data/translations.ts; phone/email/address are the shared keys.
  */
 export default function ContactPage() {
-  return <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24" />;
+  return (
+    <div>
+      <ContactHero />
+      <ContactForm />
+      <ContactDepartments />
+      <ContactFaq />
+      <ContactOffice />
+    </div>
+  );
 }

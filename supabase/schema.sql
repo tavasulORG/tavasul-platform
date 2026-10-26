@@ -1,143 +1,285 @@
 -- ==============================================================================
 -- TAWASUL PLATFORM - DATABASE SCHEMA FOR SUPABASE
--- Run this script in your Supabase SQL Editor:
+-- Run this whole file once in the Supabase SQL editor (it is safe to run again):
 -- https://supabase.com/dashboard/project/auxdpgqqlcrpmdzjgnky/sql/new
+--
+-- What it creates
+--   * content tables (translations, organization_info, sectors, regions, projects,
+--     bank_accounts, site_settings) that the public site reads with the anon key
+--   * donations and contact_messages that visitors may insert into
+--   * admin_audit_log written by the admin API
+--   * the public "media" storage bucket that the admin uploads into
+--
+-- Writes from the admin panel go through Next.js API routes that use the service
+-- role key, so no table grants write access to the anon or authenticated roles.
 -- ==============================================================================
 
--- 1. Site Content & Translations (All texts, strings, descriptions)
-CREATE TABLE IF NOT EXISTS public.translations (
-  id text PRIMARY KEY,
-  ar jsonb NOT NULL DEFAULT '{}'::jsonb,
-  tr jsonb NOT NULL DEFAULT '{}'::jsonb,
-  en jsonb NOT NULL DEFAULT '{}'::jsonb,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+create extension if not exists pgcrypto;
+
+-- Keeps updated_at current on every update.
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = timezone('utc'::text, now());
+  return new;
+end;
+$$;
+
+-- ------------------------------------------------------------------------------
+-- 1. Site texts in the three languages (one row, id = 'main')
+-- ------------------------------------------------------------------------------
+create table if not exists public.translations (
+  id text primary key,
+  ar jsonb not null default '{}'::jsonb,
+  tr jsonb not null default '{}'::jsonb,
+  en jsonb not null default '{}'::jsonb,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 2. Organization Information (About, Story, Vision, Mission, Goals, Values, Governance)
-CREATE TABLE IF NOT EXISTS public.organization_info (
-  key text PRIMARY KEY,
-  data jsonb NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+-- ------------------------------------------------------------------------------
+-- 2. Organization information (about page sections, keyed by section)
+-- ------------------------------------------------------------------------------
+create table if not exists public.organization_info (
+  key text primary key,
+  data jsonb not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 3. Sectors of Work (مجالات العمل)
-CREATE TABLE IF NOT EXISTS public.sectors (
-  id text PRIMARY KEY,
-  slug text UNIQUE NOT NULL,
-  icon_name text NOT NULL,
+-- ------------------------------------------------------------------------------
+-- 3. Sectors of work
+-- ------------------------------------------------------------------------------
+create table if not exists public.sectors (
+  id text primary key,
+  slug text unique not null,
+  icon_name text not null,
   cover_image text,
-  title jsonb NOT NULL,
+  title jsonb not null,
   subtitle jsonb,
   description jsonb,
-  objectives jsonb DEFAULT '[]'::jsonb,
-  stats jsonb DEFAULT '{}'::jsonb,
-  sort_order int DEFAULT 0,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  objectives jsonb default '[]'::jsonb,
+  stats jsonb default '{}'::jsonb,
+  sort_order int default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 4. Regions & Countries (أين نعمل)
-CREATE TABLE IF NOT EXISTS public.regions (
-  id text PRIMARY KEY,
-  slug text UNIQUE NOT NULL,
+-- ------------------------------------------------------------------------------
+-- 4. Regions and countries
+-- ------------------------------------------------------------------------------
+create table if not exists public.regions (
+  id text primary key,
+  slug text unique not null,
   flag text,
   cover_image text,
-  name jsonb NOT NULL,
+  name jsonb not null,
   headline jsonb,
   overview jsonb,
-  beneficiaries_count int DEFAULT 0,
-  active_projects_count int DEFAULT 0,
-  key_interventions jsonb DEFAULT '[]'::jsonb,
-  sort_order int DEFAULT 0,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  beneficiaries_count int default 0,
+  active_projects_count int default 0,
+  key_interventions jsonb default '[]'::jsonb,
+  sort_order int default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 5. Projects (المشاريع الإنسانية والتنموية)
-CREATE TABLE IF NOT EXISTS public.projects (
-  id text PRIMARY KEY,
-  slug text UNIQUE NOT NULL,
-  title jsonb NOT NULL,
+-- ------------------------------------------------------------------------------
+-- 5. Projects
+-- ------------------------------------------------------------------------------
+create table if not exists public.projects (
+  id text primary key,
+  slug text unique not null,
+  title jsonb not null,
   summary jsonb,
   description jsonb,
-  sector_slug text NOT NULL,
-  country_slug text NOT NULL,
+  sector_slug text not null,
+  country_slug text not null,
   country_name jsonb,
-  target_groups jsonb DEFAULT '[]'::jsonb,
-  beneficiaries_count int DEFAULT 0,
-  goal_amount numeric NOT NULL DEFAULT 0,
-  raised_amount numeric NOT NULL DEFAULT 0,
-  donors_count int DEFAULT 0,
-  status text NOT NULL DEFAULT 'active',
-  featured boolean DEFAULT false,
+  target_groups jsonb default '[]'::jsonb,
+  beneficiaries_count int default 0,
+  goal_amount numeric not null default 0,
+  raised_amount numeric not null default 0,
+  donors_count int default 0,
+  status text not null default 'active',
+  featured boolean default false,
   cover_image text,
-  gallery jsonb DEFAULT '[]'::jsonb,
-  updates jsonb DEFAULT '[]'::jsonb,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  gallery jsonb default '[]'::jsonb,
+  updates jsonb default '[]'::jsonb,
+  sort_order int default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+alter table public.projects add column if not exists sort_order int default 0;
 
--- 6. Bank Accounts (الحسابات البنكية الرسمية)
-CREATE TABLE IF NOT EXISTS public.bank_accounts (
-  id text PRIMARY KEY,
-  bank_name text NOT NULL,
-  account_holder text NOT NULL,
-  currency text NOT NULL,
-  iban text NOT NULL,
+-- ------------------------------------------------------------------------------
+-- 6. Bank accounts
+-- ------------------------------------------------------------------------------
+create table if not exists public.bank_accounts (
+  id text primary key,
+  bank_name text not null,
+  account_holder text not null,
+  currency text not null,
+  iban text not null,
   swift_code text,
   branch_name text,
   icon_color text,
-  sort_order int DEFAULT 0,
-  is_active boolean DEFAULT true,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  sort_order int default 0,
+  is_active boolean default true,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+alter table public.bank_accounts add column if not exists updated_at timestamp with time zone default timezone('utc'::text, now()) not null;
 
--- 7. Donations (سجل التبرعات والإيصالات)
-CREATE TABLE IF NOT EXISTS public.donations (
-  id text PRIMARY KEY,
-  receipt_number text UNIQUE NOT NULL,
-  donor_name text NOT NULL,
+-- ------------------------------------------------------------------------------
+-- 7. Donations (inserted by the public donation flow)
+-- ------------------------------------------------------------------------------
+create table if not exists public.donations (
+  id text primary key,
+  receipt_number text unique not null,
+  donor_name text not null,
   donor_email text,
   donor_phone text,
-  is_anonymous boolean DEFAULT false,
-  amount numeric NOT NULL,
-  currency text NOT NULL,
-  amount_usd numeric NOT NULL,
+  is_anonymous boolean default false,
+  amount numeric not null,
+  currency text not null,
+  amount_usd numeric not null,
   project_id text,
   project_title text,
   sector_slug text,
-  payment_method text NOT NULL,
-  status text NOT NULL DEFAULT 'success',
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+  payment_method text not null,
+  status text not null default 'success',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Enable Row Level Security (RLS)
-ALTER TABLE public.translations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.organization_info ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.sectors ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.regions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.bank_accounts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.donations ENABLE ROW LEVEL SECURITY;
+-- ------------------------------------------------------------------------------
+-- 8. Contact messages (inserted by the /contact form)
+-- ------------------------------------------------------------------------------
+create table if not exists public.contact_messages (
+  id uuid primary key default gen_random_uuid(),
+  reference text unique not null,
+  name text not null,
+  email text not null,
+  phone text,
+  topic text not null default 'other',
+  message text not null,
+  language text not null default 'ar',
+  status text not null default 'new',
+  notes text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+alter table public.contact_messages add column if not exists notes text;
 
--- Create Policies: Public Read Access (Everyone can read content)
-CREATE POLICY "Public can read translations" ON public.translations FOR SELECT USING (true);
-CREATE POLICY "Public can read organization_info" ON public.organization_info FOR SELECT USING (true);
-CREATE POLICY "Public can read sectors" ON public.sectors FOR SELECT USING (true);
-CREATE POLICY "Public can read regions" ON public.regions FOR SELECT USING (true);
-CREATE POLICY "Public can read projects" ON public.projects FOR SELECT USING (true);
-CREATE POLICY "Public can read bank_accounts" ON public.bank_accounts FOR SELECT USING (true);
-CREATE POLICY "Public can read donations" ON public.donations FOR SELECT USING (true);
+-- ------------------------------------------------------------------------------
+-- 9. Site settings (contact details, hero media, payment mode...), keyed by group
+-- ------------------------------------------------------------------------------
+create table if not exists public.site_settings (
+  key text primary key,
+  data jsonb not null default '{}'::jsonb,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
 
--- Allow Public to insert new donations
-CREATE POLICY "Public can create donations" ON public.donations FOR INSERT WITH CHECK (true);
+-- ------------------------------------------------------------------------------
+-- 10. Admin activity log (written by the admin API with the service role)
+-- ------------------------------------------------------------------------------
+create table if not exists public.admin_audit_log (
+  id bigserial primary key,
+  actor_id uuid,
+  actor_email text,
+  action text not null,
+  table_name text not null,
+  record_id text,
+  summary text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+create index if not exists admin_audit_log_created_at_idx on public.admin_audit_log (created_at desc);
 
--- Allow Service Role and authenticated full access
-CREATE POLICY "Admin full access translations" ON public.translations FOR ALL USING (true);
-CREATE POLICY "Admin full access organization_info" ON public.organization_info FOR ALL USING (true);
-CREATE POLICY "Admin full access sectors" ON public.sectors FOR ALL USING (true);
-CREATE POLICY "Admin full access regions" ON public.regions FOR ALL USING (true);
-CREATE POLICY "Admin full access projects" ON public.projects FOR ALL USING (true);
-CREATE POLICY "Admin full access bank_accounts" ON public.bank_accounts FOR ALL USING (true);
-CREATE POLICY "Admin full access donations" ON public.donations FOR ALL USING (true);
+-- ------------------------------------------------------------------------------
+-- updated_at triggers
+-- ------------------------------------------------------------------------------
+do $$
+declare
+  t text;
+begin
+  foreach t in array array['translations','organization_info','sectors','regions','projects','bank_accounts','site_settings']
+  loop
+    execute format('drop trigger if exists set_updated_at on public.%I', t);
+    execute format('create trigger set_updated_at before update on public.%I for each row execute function public.set_updated_at()', t);
+  end loop;
+end $$;
 
+-- ------------------------------------------------------------------------------
+-- Row level security
+-- ------------------------------------------------------------------------------
+alter table public.translations enable row level security;
+alter table public.organization_info enable row level security;
+alter table public.sectors enable row level security;
+alter table public.regions enable row level security;
+alter table public.projects enable row level security;
+alter table public.bank_accounts enable row level security;
+alter table public.donations enable row level security;
+alter table public.contact_messages enable row level security;
+alter table public.site_settings enable row level security;
+alter table public.admin_audit_log enable row level security;
+
+-- Remove the old "full access to everyone" policies from the first schema version.
+drop policy if exists "Admin full access translations" on public.translations;
+drop policy if exists "Admin full access organization_info" on public.organization_info;
+drop policy if exists "Admin full access sectors" on public.sectors;
+drop policy if exists "Admin full access regions" on public.regions;
+drop policy if exists "Admin full access projects" on public.projects;
+drop policy if exists "Admin full access bank_accounts" on public.bank_accounts;
+drop policy if exists "Admin full access donations" on public.donations;
+
+-- Public content: everyone can read.
+drop policy if exists "Public can read translations" on public.translations;
+create policy "Public can read translations" on public.translations for select using (true);
+drop policy if exists "Public can read organization_info" on public.organization_info;
+create policy "Public can read organization_info" on public.organization_info for select using (true);
+drop policy if exists "Public can read sectors" on public.sectors;
+create policy "Public can read sectors" on public.sectors for select using (true);
+drop policy if exists "Public can read regions" on public.regions;
+create policy "Public can read regions" on public.regions for select using (true);
+drop policy if exists "Public can read projects" on public.projects;
+create policy "Public can read projects" on public.projects for select using (true);
+drop policy if exists "Public can read bank_accounts" on public.bank_accounts;
+create policy "Public can read bank_accounts" on public.bank_accounts for select using (true);
+drop policy if exists "Public can read site_settings" on public.site_settings;
+create policy "Public can read site_settings" on public.site_settings for select using (true);
+
+-- Donations: the live ticker reads them and the donation flow inserts them.
+drop policy if exists "Public can read donations" on public.donations;
+create policy "Public can read donations" on public.donations for select using (true);
+drop policy if exists "Public can create donations" on public.donations;
+create policy "Public can create donations" on public.donations for insert with check (true);
+-- The donation flow bumps the project's totals through this function instead of a
+-- broad update policy, so the anon key can never edit project content.
+create or replace function public.apply_donation(p_project_id text, p_amount_usd numeric)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  update public.projects
+  set raised_amount = least(goal_amount, raised_amount + greatest(coalesce(p_amount_usd, 0), 0)),
+      donors_count = coalesce(donors_count, 0) + 1
+  where id = p_project_id;
+$$;
+grant execute on function public.apply_donation(text, numeric) to anon, authenticated, service_role;
+drop policy if exists "Public can update project totals" on public.projects;
+
+-- Contact messages: visitors may only add messages; reading them is admin-only (service role).
+drop policy if exists "Public can create contact_messages" on public.contact_messages;
+create policy "Public can create contact_messages" on public.contact_messages
+  for insert to anon, authenticated with check (true);
+drop policy if exists "Staff can read contact_messages" on public.contact_messages;
+
+-- ------------------------------------------------------------------------------
+-- Storage: public "media" bucket for images, documents and videos uploaded in the admin
+-- ------------------------------------------------------------------------------
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('media', 'media', true, 52428800)
+on conflict (id) do update set public = true, file_size_limit = 52428800;
+
+drop policy if exists "Public can read media" on storage.objects;
+create policy "Public can read media" on storage.objects for select using (bucket_id = 'media');

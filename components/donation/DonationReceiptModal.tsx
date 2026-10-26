@@ -3,11 +3,14 @@
 import React from "react";
 import { useDonation } from "@/context/DonationContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { CheckCircle2, Download, Printer, X, ShieldCheck } from "lucide-react";
+import { useContent } from "@/context/ContentContext";
+import { CheckCircle2, Download, Printer, X, ShieldCheck, FlaskConical } from "lucide-react";
 
 export function DonationReceiptModal() {
   const { activeReceipt, setActiveReceipt } = useDonation();
   const { t, language } = useLanguage();
+  const { settings } = useContent();
+  const DEMO_PAYMENT_MODE = settings.demoPaymentMode;
 
   if (!activeReceipt) return null;
 
@@ -17,8 +20,11 @@ export function DonationReceiptModal() {
     }
   };
 
+  // The overlay scrolls and the card is centred inside a min-h-full wrapper, so a receipt taller
+  // than the viewport (small laptops, landscape phones) scrolls instead of being clipped at both ends.
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 animate-fadeIn">
+      <div className="flex min-h-full items-center justify-center p-4">
       <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
         {/* Top Header */}
         <div className="bg-gradient-to-r from-primary-700 to-primary-600 p-6 text-white text-center relative">
@@ -33,10 +39,27 @@ export function DonationReceiptModal() {
           </div>
           <h3 className="text-xl font-bold">{t("donationSuccessTitle")}</h3>
           <p className="text-xs text-white/90 mt-1 max-w-sm mx-auto">{t("donationSuccessDesc")}</p>
+          {DEMO_PAYMENT_MODE && (
+            <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-[11px] font-bold text-amber-900">
+              <FlaskConical className="w-3.5 h-3.5" />
+              {t("demoReceiptBadge")}
+            </span>
+          )}
         </div>
 
         {/* Printable Receipt Body */}
-        <div id="printable-receipt" className="p-6 space-y-5 bg-white">
+        <div id="printable-receipt" className="relative p-6 space-y-5 bg-white">
+          {DEMO_PAYMENT_MODE && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden select-none"
+            >
+              <span className="-rotate-[24deg] whitespace-nowrap text-6xl font-extrabold uppercase tracking-[0.3em] text-amber-500/10">
+                {t("demoReceiptBadge")}
+              </span>
+            </div>
+          )}
+
           {/* Logo & Official Meta */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
@@ -69,9 +92,9 @@ export function DonationReceiptModal() {
               <span className="text-brand-muted">{t("donorNameLabel")}:</span>
               <span className="font-semibold text-slate-800">{activeReceipt.donorName}</span>
             </div>
-            <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-brand-muted">{t("purposeLabel")}:</span>
-              <span className="font-semibold text-slate-800 max-w-[240px] truncate text-end">
+            <div className="flex justify-between gap-4 py-1.5 border-b border-slate-100">
+              <span className="shrink-0 text-brand-muted">{t("purposeLabel")}:</span>
+              <span className="font-semibold text-slate-800 text-end break-words">
                 {activeReceipt.projectTitle || t("generalDonationFund")}
               </span>
             </div>
@@ -95,11 +118,21 @@ export function DonationReceiptModal() {
             </div>
           </div>
 
-          {/* Security Seal */}
-          <div className="flex items-center gap-2 text-[11px] text-emerald-700 bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
-            <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-600" />
-            <span>{t("verifiedReceiptNote")}</span>
-          </div>
+          {/* Security Seal / Demo Notice */}
+          {DEMO_PAYMENT_MODE ? (
+            <div className="relative flex items-start gap-2 text-[11px] text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
+              <FlaskConical className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
+              <span>
+                <span className="font-bold">{t("demoReceiptBadge")}: </span>
+                {t("demoReceiptNote")}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-[11px] text-emerald-700 bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
+              <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-600" />
+              <span>{t("verifiedReceiptNote")}</span>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex items-center gap-3 pt-2">
@@ -119,6 +152,7 @@ export function DonationReceiptModal() {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

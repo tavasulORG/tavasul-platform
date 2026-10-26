@@ -3,11 +3,12 @@
 import { motion } from "framer-motion";
 import { Eye, Target } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { aboutData } from "@/data/about";
+import { useContent } from "@/context/ContentContext";
 import { SectionHeading, fadeUp, stagger, viewportOnce } from "./shared";
 
 export function VisionMission() {
   const { language, t } = useLanguage();
+  const { about: aboutData } = useContent();
 
   return (
     <section id="vision" className="relative overflow-hidden bg-slate-950 text-white py-20 sm:py-28 scroll-mt-32">

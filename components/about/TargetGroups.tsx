@@ -14,11 +14,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { aboutData } from "@/data/about";
-import type { Language } from "@/types";
+import { useContent } from "@/context/ContentContext";
+import type { Language, TargetGroup } from "@/types";
 import { PaleCircle, SectionHeading, fadeUp, stagger, viewportOnce } from "./shared";
 
-type Group = (typeof aboutData.targetGroups)[number];
+type Group = TargetGroup;
 
 /** One icon per target group, in the order of data/about.ts. */
 const ICONS: LucideIcon[] = [Tent, UserRound, Baby, PersonStanding, Accessibility, HeartPulse, GraduationCap, Users, Hammer];
@@ -40,6 +40,7 @@ function GroupNode({ group, language }: { group: Group; language: Language }) {
 
 export function TargetGroups() {
   const { language, t } = useLanguage();
+  const { about: aboutData } = useContent();
   const groups = aboutData.targetGroups;
   const rows = [groups.slice(0, 5), groups.slice(5)];
 

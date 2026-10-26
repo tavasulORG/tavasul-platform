@@ -1,4 +1,7 @@
-export const aboutData = {
+import type { OrganizationInfo } from "@/types";
+
+/** Default About-page content; the admin edits it under organization_info and this is the fallback. */
+export const aboutData: OrganizationInfo = {
   licenseNumber: "34-292-049",
   foundedYear: 2025,
   foundationCity: "إسطنبول - تركيا (İstanbul, Türkiye)",

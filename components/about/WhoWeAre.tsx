@@ -4,11 +4,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { aboutData } from "@/data/about";
+import { useContent } from "@/context/ContentContext";
 import { DashedRing, PaleCircle, SectionHeading, fadeUp, stagger, viewportOnce } from "./shared";
 
 export function WhoWeAre() {
   const { language, t } = useLanguage();
+  const { about: aboutData } = useContent();
   const copy = aboutData.whoWeAre[language];
   const highlights = [t("aboutWhoHeritage"), t("aboutWhoScope")];
 

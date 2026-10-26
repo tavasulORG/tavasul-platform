@@ -1,8 +1,22 @@
+import { BanksHero } from "@/components/bank-accounts/BanksHero";
+import { BanksLedger } from "@/components/bank-accounts/BanksLedger";
+import { BanksSteps } from "@/components/bank-accounts/BanksSteps";
+import { BanksNotes } from "@/components/bank-accounts/BanksNotes";
+import { BanksCta } from "@/components/bank-accounts/BanksCta";
+
 /**
- * Page intentionally left empty: the previous design was removed on request
- * (2026-10-26) so it can be rebuilt from scratch. The site header and footer
- * come from app/layout.tsx.
+ * Bank accounts page: the official beneficiary card, a currency-filtered ledger with a transfer
+ * sheet (#accounts), the three steps of a transfer donation, notes with a trust panel, and a CTA.
+ * Account data lives in data/bankAccounts.ts; copy in the bank* keys of data/translations.ts.
  */
 export default function BankAccountsPage() {
-  return <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24" />;
+  return (
+    <div>
+      <BanksHero />
+      <BanksLedger />
+      <BanksSteps />
+      <BanksNotes />
+      <BanksCta />
+    </div>
+  );
 }

@@ -1,8 +1,32 @@
+"use client";
+
+import { useContent } from "@/context/ContentContext";
+import { WhereHero } from "@/components/where-we-work/WhereHero";
+import { WhereCountryRow } from "@/components/where-we-work/WhereCountryRow";
+import { WhereMap } from "@/components/where-we-work/WhereMap";
+import { WhereProjects } from "@/components/where-we-work/WhereProjects";
+import { WhereRegionSection } from "@/components/where-we-work/WhereRegionSection";
+import { WhereCta } from "@/components/where-we-work/WhereCta";
+
 /**
- * Page intentionally left empty: the previous design was removed on request
- * (2026-10-26) so it can be rebuilt from scratch. The site header and footer
- * come from app/layout.tsx.
+ * Unified where-we-work page. Each region renders as a section whose id is its slug
+ * (#turkey, #yemen, ...), the target of app/where-we-work/[slug]/page.tsx redirects,
+ * the footer links and the region cards on the home page. Regions come from the content
+ * context (Supabase, edited in the admin) with data/regions.ts as the fallback.
  */
 export default function WhereWeWorkPage() {
-  return <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24" />;
+  const { regions } = useContent();
+
+  return (
+    <div>
+      <WhereHero />
+      <WhereCountryRow />
+      <WhereMap />
+      <WhereProjects />
+      {regions.map((region, i) => (
+        <WhereRegionSection key={region.id} region={region} index={i} flip={i % 2 === 1} />
+      ))}
+      <WhereCta />
+    </div>
+  );
 }

@@ -1,9 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { Currency, DonationRecord, Project } from "@/types";
 import { initialProjects } from "@/data/projects";
 import { supabase } from "@/lib/supabase";
+import { rowToProject } from "@/lib/contentMappers";
+import { isPreviewWindow, usePreview } from "@/lib/previewBridge";
 import confetti from "canvas-confetti";
 
 interface DonationContextType {
@@ -14,19 +16,19 @@ interface DonationContextType {
   formatAmount: (amountUSD: number) => string;
   convertUSDToCurrency: (amountUSD: number) => number;
   convertCurrencyToUSD: (amount: number) => number;
-  
+
   // Quick Donate Drawer
   isQuickDonateOpen: boolean;
   openQuickDonate: (projectId?: string, defaultAmountUSD?: number) => void;
   closeQuickDonate: () => void;
   selectedProjectId: string | null;
   defaultAmountUSD: number;
-  
+
   // Projects dynamic state
   projects: Project[];
   getProjectById: (id: string) => Project | undefined;
   getProjectBySlug: (slug: string) => Project | undefined;
-  
+
   // Submit donation simulation
   submitDonation: (data: {
     donorName: string;
@@ -115,6 +117,16 @@ const INITIAL_DONATIONS: DonationRecord[] = [
   },
 ];
 
+/** Admin sort order first (0 = unsorted, last), then the largest goal, as the site always listed them. */
+function sortProjects(list: Project[]): Project[] {
+  return [...list].sort((a, b) => {
+    const sa = a.sortOrder ?? 0;
+    const sb = b.sortOrder ?? 0;
+    if (sa !== sb) return sa === 0 ? 1 : sb === 0 ? -1 : sa - sb;
+    return b.goalAmount - a.goalAmount;
+  });
+}
+
 const DonationContext = createContext<DonationContextType | undefined>(undefined);
 
 export function DonationProvider({ children }: { children: React.ReactNode }) {
@@ -122,42 +134,18 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
   const [isQuickDonateOpen, setIsQuickDonateOpen] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [defaultAmountUSD, setDefaultAmountUSD] = useState(50);
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
+  const [storedProjects, setProjects] = useState<Project[]>(initialProjects);
   const [recentDonations, setRecentDonations] = useState<DonationRecord[]>(INITIAL_DONATIONS);
   const [activeReceipt, setActiveReceipt] = useState<DonationRecord | null>(null);
+  const preview = usePreview();
 
   // 1. Fetch Projects from Supabase
   useEffect(() => {
     async function loadProjects() {
       try {
-        const { data, error } = await supabase
-          .from("projects")
-          .select("*")
-          .order("goal_amount", { ascending: false });
-
+        const { data, error } = await supabase.from("projects").select("*");
         if (data && data.length > 0 && !error) {
-          const mapped: Project[] = data.map((row: any) => ({
-            id: row.id,
-            slug: row.slug,
-            title: row.title,
-            summary: row.summary,
-            description: row.description,
-            sectorSlug: row.sector_slug,
-            countrySlug: row.country_slug,
-            countryName: row.country_name,
-            targetGroups: row.target_groups || [],
-            beneficiariesCount: Number(row.beneficiaries_count || 0),
-            goalAmount: Number(row.goal_amount || 0),
-            raisedAmount: Number(row.raised_amount || 0),
-            donorsCount: Number(row.donors_count || 0),
-            status: row.status,
-            featured: row.featured,
-            coverImage: row.cover_image,
-            gallery: row.gallery || [],
-            updates: row.updates || [],
-            createdAt: row.created_at,
-          }));
-          setProjects(mapped);
+          setProjects(sortProjects(data.map(rowToProject)));
         }
       } catch (err) {
         console.warn("Using local initial projects fallback:", err);
@@ -207,6 +195,19 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
       setCurrencyState(saved);
     }
   }, []);
+
+  // The admin's preview iframe injects the project being edited (unsaved draft).
+  const projects = useMemo(() => {
+    const drafts = preview.overrides.projects;
+    if (!drafts || drafts.length === 0) return storedProjects;
+    const byId = new Map(drafts.map((p) => [p.id, p]));
+    const merged = storedProjects.map((p) => byId.get(p.id) ?? p);
+    const existing = new Set(storedProjects.map((p) => p.id));
+    drafts.forEach((p) => {
+      if (!existing.has(p.id)) merged.push(p);
+    });
+    return sortProjects(merged);
+  }, [storedProjects, preview.overrides.projects]);
 
   const setCurrency = (c: Currency) => {
     setCurrencyState(c);
@@ -298,40 +299,37 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
     setRecentDonations((prev) => [newRecord, ...prev.slice(0, 9)]);
     setActiveReceipt(newRecord);
 
-    // Save donation to Supabase
-    try {
-      await supabase.from("donations").insert({
-        id: newRecord.id,
-        receipt_number: newRecord.receiptNumber,
-        donor_name: newRecord.donorName,
-        donor_email: newRecord.donorEmail,
-        donor_phone: data.donorPhone,
-        is_anonymous: newRecord.isAnonymous,
-        amount: newRecord.amount,
-        currency: newRecord.currency,
-        amount_usd: newRecord.amountUSD,
-        project_id: newRecord.projectId,
-        project_title: newRecord.projectTitle,
-        sector_slug: newRecord.sectorSlug,
-        payment_method: newRecord.paymentMethod,
-        status: newRecord.status,
-        created_at: new Date().toISOString(),
-      });
+    // Save donation to Supabase (never from the admin's preview iframe).
+    if (!isPreviewWindow()) {
+      try {
+        await supabase.from("donations").insert({
+          id: newRecord.id,
+          receipt_number: newRecord.receiptNumber,
+          donor_name: newRecord.donorName,
+          donor_email: newRecord.donorEmail,
+          donor_phone: data.donorPhone,
+          is_anonymous: newRecord.isAnonymous,
+          amount: newRecord.amount,
+          currency: newRecord.currency,
+          amount_usd: newRecord.amountUSD,
+          project_id: newRecord.projectId,
+          project_title: newRecord.projectTitle,
+          sector_slug: newRecord.sectorSlug,
+          payment_method: newRecord.paymentMethod,
+          status: newRecord.status,
+          created_at: new Date().toISOString(),
+        });
 
-      // Update project raisedAmount in Supabase if exists
-      if (data.projectId && matchedProject) {
-        const updatedRaised = Math.min(matchedProject.goalAmount, matchedProject.raisedAmount + Math.round(amountInUSD));
-        await supabase
-          .from("projects")
-          .update({
-            raised_amount: updatedRaised,
-            donors_count: matchedProject.donorsCount + 1,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", data.projectId);
+        // Bump the project's totals through the security-definer function (supabase/schema.sql).
+        if (data.projectId && matchedProject) {
+          await supabase.rpc("apply_donation", {
+            p_project_id: data.projectId,
+            p_amount_usd: Math.round(amountInUSD),
+          });
+        }
+      } catch (dbErr) {
+        console.warn("Could not sync donation to Supabase:", dbErr);
       }
-    } catch (dbErr) {
-      console.warn("Could not sync donation to Supabase:", dbErr);
     }
 
     // Fire festive celebratory confetti
@@ -385,4 +383,3 @@ export function useDonation() {
   }
   return context;
 }
-

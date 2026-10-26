@@ -4,14 +4,13 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Award, CalendarDays, MapPin, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { aboutData } from "@/data/about";
+import { useContent } from "@/context/ContentContext";
 import { EASE, PaleCircle, fadeUp, stagger, viewportOnce } from "./shared";
-
-/** Replace this file under public/images to change the hero photo. */
-const HERO_IMAGE = "/images/about-hero.jpg";
 
 export function AboutHero() {
   const { t } = useLanguage();
+  const { about: aboutData, settings } = useContent();
+  const HERO_IMAGE = settings.aboutHeroImage;
 
   const facts = [
     { icon: CalendarDays, label: t("aboutFoundedLabel"), value: String(aboutData.foundedYear), ltr: true },

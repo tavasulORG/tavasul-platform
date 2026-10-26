@@ -3,11 +3,12 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { aboutData } from "@/data/about";
+import { useContent } from "@/context/ContentContext";
 import { PaleCircle, SectionHeading, fadeUp, stagger, viewportOnce } from "./shared";
 
 export function OurStory() {
   const { language, t } = useLanguage();
+  const { about: aboutData } = useContent();
   const story = aboutData.ourStory[language];
 
   const steps = [

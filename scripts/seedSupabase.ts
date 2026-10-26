@@ -7,7 +7,12 @@ import { initialProjects } from "../data/projects";
 import { bankAccountsData } from "../data/bankAccounts";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://auxdpgqqlcrpmdzjgnky.supabase.co";
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1eGRwZ3FxbGNycG1kempnbmt5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjQwOTQwMSwiZXhwIjoyMTA3OTg1NDAxfQ.1Cv1sSUXFB1Q1f6csEbyoE6QrW8AAWUvl7XsPNKPWvQ";
+// Never hard-code this key: the repository is public. Run with SUPABASE_SERVICE_ROLE_KEY in the env.
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!serviceRoleKey) {
+  console.error("SUPABASE_SERVICE_ROLE_KEY is not set.");
+  process.exit(1);
+}
 
 const supabase = createClient(supabaseUrl, serviceRoleKey);
 

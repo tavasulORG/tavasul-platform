@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import { Compass } from "lucide-react";
 import clsx from "clsx";
 import { useLanguage } from "@/context/LanguageContext";
-import { aboutData } from "@/data/about";
-import type { Language } from "@/types";
+import { useContent } from "@/context/ContentContext";
+import type { AboutValue, Language } from "@/types";
 import { PaleCircle, SectionHeading, fadeUp, stagger, viewportOnce } from "./shared";
 
-type Value = (typeof aboutData.values)[number];
+type Value = AboutValue;
 
 function ValueItem({ value, language, mirrored }: { value: Value; language: Language; mirrored: boolean }) {
   return (
@@ -29,6 +29,7 @@ function ValueItem({ value, language, mirrored }: { value: Value; language: Lang
 
 export function Values() {
   const { language, t } = useLanguage();
+  const { about: aboutData } = useContent();
   const first = aboutData.values.slice(0, 3);
   const second = aboutData.values.slice(3);
 

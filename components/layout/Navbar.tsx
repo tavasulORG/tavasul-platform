@@ -5,12 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDonation } from "@/context/DonationContext";
+import { useContent } from "@/context/ContentContext";
 import { Language, Currency } from "@/types";
 import { Heart, Globe, Menu, X, Phone, Coins, ShieldCheck } from "lucide-react";
 
 export function Navbar() {
   const { language, setLanguage, t } = useLanguage();
   const { currency, setCurrency, openQuickDonate } = useDonation();
+  const { settings } = useContent();
   const pathname = usePathname();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -28,6 +30,11 @@ export function Navbar() {
 
   const isCurrent = (href: string) => (href === "/" ? pathname === "/" : pathname?.startsWith(href) ?? false);
 
+  // The admin panel has its own shell.
+  if (pathname?.startsWith("/admin")) return null;
+
+  const phoneDigits = settings.phone.replace(/[^d+]/g, "");
+
   return (
     <header className="sticky top-0 z-40 bg-white shadow-md shadow-slate-200/70">
       {/* Top Utility Bar */}
@@ -40,11 +47,11 @@ export function Navbar() {
             </span>
             <span className="hidden sm:inline-block text-white/40">|</span>
             <a
-              href="tel:+905340000000"
+              href={`tel:${phoneDigits}`}
               className="hidden sm:flex items-center gap-1 hover:text-white transition"
             >
               <Phone className="w-3 h-3 text-white/70" />
-              <span dir="ltr">+90 534 000 0000</span>
+              <span dir="ltr">{settings.phone}</span>
             </a>
           </div>
 
@@ -88,7 +95,7 @@ export function Navbar() {
           <div className="h-8 flex shrink-0 items-center pe-3 sm:pe-5 border-e border-slate-200">
             <Link href="/" className="flex items-center group">
               <img
-                src="/images/logo.jpg"
+                src={settings.logo}
                 alt="Tawasul Logo"
                 className="h-10 w-[138px] sm:h-12 sm:w-auto sm:max-w-[210px] object-contain"
               />

@@ -1,8 +1,24 @@
+import { Suspense } from "react";
+import { ProjectsHero } from "@/components/projects/ProjectsHero";
+import { ProjectsExplorer } from "@/components/projects/ProjectsExplorer";
+import { ProjectsUpdates } from "@/components/projects/ProjectsUpdates";
+import { ProjectsCta } from "@/components/projects/ProjectsCta";
+
 /**
- * Page intentionally left empty: the previous design was removed on request
- * (2026-10-26) so it can be rebuilt from scratch. The site header and footer
- * come from app/layout.tsx.
+ * Unified projects page. The status filter reads ?status=active|completed, the
+ * targets of the redirects in app/projects/active and app/projects/completed;
+ * ?sector= and ?country= let other pages deep-link into a filtered list.
  */
 export default function ProjectsPage() {
-  return <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24" />;
+  return (
+    <div>
+      <ProjectsHero />
+      {/* useSearchParams needs a Suspense boundary during static rendering. */}
+      <Suspense fallback={<section className="min-h-[480px] bg-white" />}>
+        <ProjectsExplorer />
+      </Suspense>
+      <ProjectsUpdates />
+      <ProjectsCta />
+    </div>
+  );
 }

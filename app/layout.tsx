@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { ContentProvider } from "@/context/ContentContext";
 import { DonationProvider } from "@/context/DonationContext";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -30,13 +31,15 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen flex flex-col justify-between selection:bg-primary-500 selection:text-white">
         <LanguageProvider>
-          <DonationProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <QuickDonateDrawer />
-            <DonationReceiptModal />
-          </DonationProvider>
+          <ContentProvider>
+            <DonationProvider>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <QuickDonateDrawer />
+              <DonationReceiptModal />
+            </DonationProvider>
+          </ContentProvider>
         </LanguageProvider>
       </body>
     </html>
