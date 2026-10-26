@@ -118,8 +118,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
             {project.targetGroups && project.targetGroups.length > 0 && (
               <div className="flex items-center flex-wrap gap-1.5">
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 me-0.5">
-                  <Users className="w-3.5 h-3.5 text-slate-400" />
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-muted me-0.5">
+                  <Users className="w-3.5 h-3.5 text-brand-muted" />
                   <span>{t("targetGroup")}:</span>
                 </span>
                 {project.targetGroups.slice(0, 3).map((grp, i) => (

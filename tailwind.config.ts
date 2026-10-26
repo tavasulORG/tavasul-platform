@@ -31,7 +31,18 @@ export default {
           light: "#f8fafc",
           gold: "#f59e0b",
           emerald: "#10b981",
+          // Light surface palette (replaces near-black / navy panels)
+          sky: "#EAF7FB",
+          mist: "#F0FBFF",
+          tint: "#D9F3FB",
+          ink: "#0F172A",
+          body: "#334155",
+          muted: "#475569",
+          line: "#E2E8F0",
         },
+      },
+      boxShadow: {
+        "brand-soft": "0 12px 32px -14px rgba(0, 163, 224, 0.28), 0 2px 6px -2px rgba(15, 23, 42, 0.06)",
       },
       fontFamily: {
         sans: [

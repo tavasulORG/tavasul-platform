@@ -14,6 +14,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // The former "About" sub-pages are now sections of the unified /about page.
+  async redirects() {
+    return [
+      { source: "/our-story", destination: "/about#story", permanent: true },
+      { source: "/vision-mission", destination: "/about#vision", permanent: true },
+      { source: "/goals-values", destination: "/about#goals", permanent: true },
+      { source: "/governance", destination: "/about#governance", permanent: true },
+      { source: "/partners", destination: "/about#partners", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

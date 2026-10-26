@@ -308,7 +308,7 @@ export function ImpactStorySection() {
                 <span>{t("storyBadge")}</span>
               </div>
 
-              <h2 className="text-lg sm:text-xl lg:text-[23px] font-brand font-bold text-[#0F2942] leading-[1.55]">
+              <h2 className="text-lg sm:text-xl lg:text-[23px] font-brand font-bold text-brand-ink leading-[1.55]">
                 {sectionHeadline[language]}
               </h2>
             </div>
@@ -320,7 +320,7 @@ export function ImpactStorySection() {
                 type="button"
                 onClick={handlePrev}
                 aria-label="Previous story"
-                className="w-11 h-11 rounded-full bg-slate-100/90 hover:bg-[#0F2942] text-slate-700 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="w-11 h-11 rounded-full bg-slate-100/90 hover:bg-primary-600 text-slate-700 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               >
                 {isRtl ? (
                   <ArrowRight className="w-4 h-4" />
@@ -436,7 +436,7 @@ export function ImpactStorySection() {
                             handleNext();
                           }}
                           aria-label="Next story"
-                          className="relative w-11 h-11 rounded-full bg-white/90 hover:bg-white text-[#0F2942] backdrop-blur-md flex items-center justify-center cursor-pointer transition-colors shadow-md group/arrow"
+                          className="relative w-11 h-11 rounded-full bg-white/90 hover:bg-white text-brand-ink backdrop-blur-md flex items-center justify-center cursor-pointer transition-colors shadow-md group/arrow"
                         >
                           {/* SVG Circular Progress Ring matching top style */}
                           <svg
@@ -466,9 +466,9 @@ export function ImpactStorySection() {
 
                           {/* Arrow Icon */}
                           {isRtl ? (
-                            <ArrowLeft className="relative z-10 w-4 h-4 text-[#0F2942] transition-transform group-hover/arrow:-translate-x-0.5" />
+                            <ArrowLeft className="relative z-10 w-4 h-4 text-brand-ink transition-transform group-hover/arrow:-translate-x-0.5" />
                           ) : (
-                            <ArrowRight className="relative z-10 w-4 h-4 text-[#0F2942] transition-transform group-hover/arrow:translate-x-0.5" />
+                            <ArrowRight className="relative z-10 w-4 h-4 text-brand-ink transition-transform group-hover/arrow:translate-x-0.5" />
                           )}
                         </button>
                       </div>

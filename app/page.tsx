@@ -191,7 +191,10 @@ export default function HomePage() {
             <source src="/videos/hero-tawasul.mp4" type="video/mp4" />
           </video>
           {/* Gradient overlay keeps the hero text readable over the video. */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/45 to-transparent md:bg-gradient-to-r md:from-slate-950/80 md:via-slate-950/40 md:to-transparent rtl:md:bg-gradient-to-l rtl:md:from-slate-950/80 rtl:md:via-slate-950/40 rtl:md:to-transparent" />
+          {/* Mobile: short bottom fade behind the full-width text block only. */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent md:hidden" />
+          {/* Desktop: narrow radial shade anchored to the text corner (bottom-right in RTL, bottom-left in LTR). */}
+          <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_55%_55%_at_0%_100%,rgba(2,6,23,0.75)_0%,rgba(2,6,23,0.35)_45%,transparent_75%)] rtl:bg-[radial-gradient(ellipse_55%_55%_at_100%_100%,rgba(2,6,23,0.75)_0%,rgba(2,6,23,0.35)_45%,transparent_75%)]" />
         </motion.div>
 
         {/* Hero Content Container */}
@@ -368,7 +371,7 @@ export default function HomePage() {
                 className={colSpan}
               >
                 <Link
-                  href={`/sectors/${sec.slug}`}
+                  href={`/sectors#${sec.slug}`}
                   className="group relative rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block w-full h-full"
                 >
                   <Image
@@ -442,7 +445,7 @@ export default function HomePage() {
             {regionsData.map((reg) => (
               <motion.div key={reg.id} variants={cardItemVariants}>
                 <Link
-                  href={`/where-we-work/${reg.slug}`}
+                  href={`/where-we-work#${reg.slug}`}
                   className="group relative h-72 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block"
                 >
                   <Image
@@ -478,18 +481,18 @@ export default function HomePage() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={fadeUpVariants}
-          className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-3xl p-8 sm:p-12 shadow-xl border border-slate-800 space-y-8"
+          className="bg-gradient-to-br from-brand-sky via-brand-mist to-white text-brand-ink rounded-3xl p-8 sm:p-12 shadow-brand-soft border border-brand-line space-y-8"
         >
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-brand-line pb-6">
             <div>
-              <span className="text-sky-400 text-xs font-bold block mb-1">
+              <span className="text-primary-700 text-xs font-bold block mb-1">
                 {t("directFinancialDonation")}
               </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-brand">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-ink font-brand">
                 {t("officialBankAccounts")}
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                {t("officialAccountName")}: <strong className="text-white">TAVASUL YARDIM VE KALKINMA DERNEĞİ</strong>
+              <p className="text-xs text-brand-muted mt-1">
+                {t("officialAccountName")}: <strong className="text-brand-ink">TAVASUL YARDIM VE KALKINMA DERNEĞİ</strong>
               </p>
             </div>
 
@@ -513,24 +516,24 @@ export default function HomePage() {
               <motion.div
                 key={acc.id}
                 variants={cardItemVariants}
-                className="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/80 space-y-2 text-xs"
+                className="bg-white rounded-2xl p-4 border border-brand-line shadow-sm space-y-2 text-xs"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">{acc.bankName}</span>
-                  <span className="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full font-bold">
+                  <span className="font-bold text-brand-ink">{acc.bankName}</span>
+                  <span className="text-[10px] bg-sky-100 text-primary-700 px-2 py-0.5 rounded-full font-bold">
                     {acc.currency}
                   </span>
                 </div>
-                <div className="flex items-center justify-between bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 font-mono text-[11px]">
-                  <span className="truncate text-slate-200">{acc.iban}</span>
+                <div className="flex items-center justify-between bg-brand-mist p-2.5 rounded-xl border border-brand-line font-mono text-[11px]">
+                  <span className="truncate text-brand-muted">{acc.iban}</span>
                   <button
                     type="button"
                     onClick={() => handleCopyIban(acc.id, acc.iban)}
-                    className="shrink-0 ms-2 p-1 text-sky-400 hover:text-white transition"
+                    className="shrink-0 ms-2 p-1 text-primary-600 hover:text-brand-ink transition"
                     title={t("copyIban")}
                   >
                     {copiedIbanId === acc.id ? (
-                      <Check className="w-4 h-4 text-emerald-400" />
+                      <Check className="w-4 h-4 text-emerald-600" />
                     ) : (
                       <Copy className="w-4 h-4" />
                     )}
@@ -564,13 +567,13 @@ export default function HomePage() {
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">
             <Link
-              href="/governance"
+              href="/about#governance"
               className="py-3 px-6 rounded-2xl bg-[#00A3E0] hover:bg-[#0284c7] text-white font-bold text-xs shadow-md transition text-center"
             >
               {t("financialAuditReports")}
             </Link>
             <Link
-              href="/partners"
+              href="/about#partners"
               className="py-3 px-6 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200 transition text-center"
             >
               {t("partnersCta")}
@@ -599,7 +602,7 @@ export default function HomePage() {
               },
             },
           }}
-          className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 rounded-3xl p-10 sm:p-16 text-center text-white space-y-6 shadow-2xl border border-slate-800"
+          className="relative overflow-hidden bg-gradient-to-br from-brand-sky via-brand-mist to-white rounded-3xl p-10 sm:p-16 text-center text-brand-ink space-y-6 shadow-brand-soft border border-brand-line"
         >
           <motion.div
             variants={fadeUpVariants}
@@ -608,7 +611,7 @@ export default function HomePage() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-brand leading-tight">
               {t("finalCtaTitle")}
             </h2>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p className="text-brand-body text-sm sm:text-base leading-relaxed">
               {t("finalCtaDesc")}
             </p>
           </motion.div>
@@ -628,7 +631,7 @@ export default function HomePage() {
 
             <Link
               href="/volunteer"
-              className="px-7 py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm sm:text-base border border-white/20 backdrop-blur-md transition flex items-center gap-2"
+              className="px-7 py-4 rounded-2xl bg-white hover:bg-brand-sky text-primary-700 font-bold text-sm sm:text-base border border-brand-line shadow-sm transition flex items-center gap-2"
             >
               <Users className="w-4 h-4" />
               <span>{t("joinAsVolunteer")}</span>

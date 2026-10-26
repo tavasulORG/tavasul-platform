@@ -49,7 +49,7 @@ const TRUST_NODES: TrustNode[] = [
     titleKey: "trustItem1Title",
     descKey: "trustItem1Desc",
     arcPosition: "bottom",
-    color: "#0F3558", // Deep Navy
+    color: "#0369A1", // Brand Deep Cyan
     cx: 130,
     cy: 183,
     arcPath: "M 63.59 240.73 A 88 88 0 0 0 196.41 240.73",
@@ -61,7 +61,7 @@ const TRUST_NODES: TrustNode[] = [
     titleKey: "trustItem2Title",
     descKey: "trustItem2Desc",
     arcPosition: "top",
-    color: "#184E77", // Rich Corporate Blue
+    color: "#0277B1", // Brand Mid Cyan
     cx: 340,
     cy: 209.7,
     arcPath: "M 273.59 151.97 A 88 88 0 0 1 406.41 151.97",
@@ -73,7 +73,7 @@ const TRUST_NODES: TrustNode[] = [
     titleKey: "trustItem3Title",
     descKey: "trustItem3Desc",
     arcPosition: "bottom",
-    color: "#2B6999", // Medium Ocean Blue
+    color: "#0284C7", // Brand Ocean Cyan
     cx: 550,
     cy: 183,
     arcPath: "M 483.59 240.73 A 88 88 0 0 0 616.41 240.73",
@@ -85,7 +85,7 @@ const TRUST_NODES: TrustNode[] = [
     titleKey: "trustItem4Title",
     descKey: "trustItem4Desc",
     arcPosition: "top",
-    color: "#3182AC", // Teal / Tawasul Blue
+    color: "#0194D0", // Brand Bright Cyan
     cx: 760,
     cy: 209.7,
     arcPath: "M 693.59 151.97 A 88 88 0 0 1 826.41 151.97",
@@ -97,7 +97,7 @@ const TRUST_NODES: TrustNode[] = [
     titleKey: "trustItem5Title",
     descKey: "trustItem5Desc",
     arcPosition: "bottom",
-    color: "#67AED3", // Soft Sky Cyan
+    color: "#00A3E0", // Tawasul Brand Cyan
     cx: 970,
     cy: 183,
     arcPath: "M 903.59 240.73 A 88 88 0 0 0 1036.41 240.73",
@@ -109,25 +109,25 @@ const DASHED_CONNECTORS = [
     id: "conn-1",
     afterStep: 1, // Draws after Node 1 appears, leading into Node 2
     d: "M 196.41 240.73 L 273.59 151.97",
-    color: "#144268",
+    color: "#0277B1",
   },
   {
     id: "conn-2",
     afterStep: 2, // Draws after Node 2 appears, leading into Node 3
     d: "M 406.41 151.97 L 483.59 240.73",
-    color: "#225C88",
+    color: "#0284C7",
   },
   {
     id: "conn-3",
     afterStep: 3, // Draws after Node 3 appears, leading into Node 4
     d: "M 616.41 240.73 L 693.59 151.97",
-    color: "#2E76A3",
+    color: "#0194D0",
   },
   {
     id: "conn-4",
     afterStep: 4, // Draws after Node 4 appears, leading into Node 5
     d: "M 826.41 151.97 L 903.59 240.73",
-    color: "#4C98C0",
+    color: "#00A3E0",
   },
 ];
 
@@ -241,7 +241,7 @@ export function TrustJourney() {
             hasTriggered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-black font-brand text-[#0F2942] tracking-tight text-start">
+          <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-black font-brand text-brand-ink tracking-tight text-start">
             {t("whyTawasulTitle")}
           </h2>
         </div>
@@ -378,7 +378,7 @@ export function TrustJourney() {
                       "opacity 450ms ease-out 120ms, transform 450ms cubic-bezier(0.22, 1, 0.36, 1) 120ms",
                   }}
                 >
-                  <h3 className="font-extrabold text-[13px] lg:text-[15px] text-[#0F2942] leading-snug mb-1">
+                  <h3 className="font-extrabold text-[13px] lg:text-[15px] text-brand-ink leading-snug mb-1">
                     {t(node.titleKey)}
                   </h3>
                   <p className="text-[11px] lg:text-[12.5px] text-slate-600 leading-relaxed">
@@ -451,7 +451,7 @@ export function TrustJourney() {
                 </div>
 
                 <div className="flex-1 py-1 text-start">
-                  <h3 className="font-extrabold text-sm text-[#0F2942] mb-0.5">
+                  <h3 className="font-extrabold text-sm text-brand-ink mb-0.5">
                     {t(node.titleKey)}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed">

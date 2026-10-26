@@ -126,7 +126,7 @@ export function QuickDonateDrawer() {
           </div>
           <button
             onClick={closeQuickDonate}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+            className="p-2 rounded-xl text-brand-muted hover:text-brand-ink hover:bg-slate-100 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -173,7 +173,7 @@ export function QuickDonateDrawer() {
                 frequency === "monthly" ? "bg-white text-primary-700 shadow-sm" : "text-slate-600"
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
               <span>{t("monthlyDonation")}</span>
             </button>
           </div>

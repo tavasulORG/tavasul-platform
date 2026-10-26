@@ -21,7 +21,7 @@ export function DonationReceiptModal() {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
       <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
         {/* Top Header */}
-        <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-sky-400 p-6 text-white text-center relative">
+        <div className="bg-gradient-to-r from-primary-700 to-primary-600 p-6 text-white text-center relative">
           <button
             onClick={() => setActiveReceipt(null)}
             className="absolute top-4 left-4 rtl:left-auto rtl:right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
@@ -45,7 +45,7 @@ export function DonationReceiptModal() {
               <div className="text-[11px] text-primary-600 font-semibold">{t("turkishLicenseShort")}</div>
             </div>
             <div className="text-end">
-              <span className="text-[11px] text-slate-400 block">{t("receiptNumber")}</span>
+              <span className="text-[11px] text-brand-muted block">{t("receiptNumber")}</span>
               <span className="text-xs font-mono font-bold text-slate-800 bg-slate-100 px-2 py-1 rounded">
                 {activeReceipt.receiptNumber}
               </span>
@@ -58,7 +58,7 @@ export function DonationReceiptModal() {
             <div className="text-3xl font-extrabold text-primary-600">
               {activeReceipt.amount.toLocaleString()} {activeReceipt.currency}
             </div>
-            <span className="text-[11px] text-slate-400 mt-1 block">
+            <span className="text-[11px] text-brand-muted mt-1 block">
               {t("approximateUsd")} ~ ${Math.round(activeReceipt.amountUSD)} USD
             </span>
           </div>
@@ -66,23 +66,23 @@ export function DonationReceiptModal() {
           {/* Details Table */}
           <div className="space-y-2 text-xs text-slate-600">
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">{t("donorNameLabel")}:</span>
+              <span className="text-brand-muted">{t("donorNameLabel")}:</span>
               <span className="font-semibold text-slate-800">{activeReceipt.donorName}</span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">{t("purposeLabel")}:</span>
+              <span className="text-brand-muted">{t("purposeLabel")}:</span>
               <span className="font-semibold text-slate-800 max-w-[240px] truncate text-end">
                 {activeReceipt.projectTitle || t("generalDonationFund")}
               </span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">{t("paymentMethodLabel")}:</span>
+              <span className="text-brand-muted">{t("paymentMethodLabel")}:</span>
               <span className="font-semibold text-slate-800">
                 {activeReceipt.paymentMethod === "card" ? t("electronicCard") : t("directBankTransfer")}
               </span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-slate-100">
-              <span className="text-slate-400">{t("depositDate")}:</span>
+              <span className="text-brand-muted">{t("depositDate")}:</span>
               <span className="font-semibold text-slate-800">
                 {new Date().toLocaleDateString(language === "ar" ? "ar-EG" : "en-US", {
                   year: "numeric",
@@ -105,7 +105,7 @@ export function DonationReceiptModal() {
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={handlePrint}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition shadow-sm"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-primary-600 text-white text-xs font-bold hover:bg-primary-700 transition shadow-sm"
             >
               <Printer className="w-4 h-4" />
               <span>{t("printReceipt")}</span>

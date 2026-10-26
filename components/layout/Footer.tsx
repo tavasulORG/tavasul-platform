@@ -18,19 +18,19 @@ export function Footer() {
   const { language, t } = useLanguage();
 
   return (
-    <footer className="bg-slate-950 text-slate-400 text-xs border-t border-slate-850">
+    <footer className="bg-gradient-to-b from-brand-ink to-brand-dark text-slate-300 text-xs">
       {/* Top Banner / Registration Badge */}
-      <div className="bg-slate-900 border-b border-slate-800 py-6 px-4 sm:px-8">
+      <div className="bg-white border-b border-brand-line py-6 px-4 sm:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center text-primary-400 shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-brand-sky border border-brand-line flex items-center justify-center text-primary-600 shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-white font-bold text-sm">
+              <div className="text-brand-ink font-bold text-sm">
                 {t("footerLegalTitle")}
               </div>
-              <div className="text-[11px] text-slate-400">
+              <div className="text-[11px] text-brand-muted">
                 {t("footerLegalDescription")}
               </div>
             </div>
@@ -38,11 +38,11 @@ export function Footer() {
 
           <div className="flex items-center gap-2">
             <Link
-              href="/governance"
-              className="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition border border-slate-700 flex items-center gap-1.5"
+              href="/about#governance"
+              className="py-2 px-4 rounded-xl bg-white hover:bg-brand-sky text-primary-700 font-semibold text-xs transition border border-brand-line shadow-sm flex items-center gap-1.5"
             >
               <span>{t("governanceReports")}</span>
-              <ExternalLink className="w-3 h-3 text-slate-400" />
+              <ExternalLink className="w-3 h-3 text-primary-600" />
             </Link>
           </div>
         </div>
@@ -66,7 +66,7 @@ export function Footer() {
             </div>
           </div>
 
-          <p className="text-slate-400 text-xs leading-relaxed max-w-md">
+          <p className="text-slate-300 text-xs leading-relaxed max-w-md">
             {t("footerAbout")}
           </p>
 
@@ -95,7 +95,7 @@ export function Footer() {
             {sectorsData.map((sec) => (
               <li key={sec.id}>
                 <Link
-                  href={`/sectors/${sec.slug}`}
+                  href={`/sectors#${sec.slug}`}
                   className="hover:text-primary-400 transition block truncate"
                 >
                   {sec.title[language] || sec.title.ar}
@@ -114,7 +114,7 @@ export function Footer() {
             {regionsData.map((reg) => (
               <li key={reg.id}>
                 <Link
-                  href={`/where-we-work/${reg.slug}`}
+                  href={`/where-we-work#${reg.slug}`}
                   className="hover:text-primary-400 transition flex items-center gap-1.5"
                 >
                   <span>{reg.flag}</span>
@@ -125,7 +125,7 @@ export function Footer() {
             <li className="pt-2">
               <Link
                 href="/projects"
-                className="text-primary-400 hover:text-primary-300 font-bold block"
+                className="text-primary-400 hover:text-white font-bold block"
               >
                 {t("allHumanitarianProjects")} →
               </Link>
@@ -140,7 +140,7 @@ export function Footer() {
           </h4>
           <ul className="space-y-2">
             <li>
-              <Link href="/our-story" className="hover:text-primary-400 transition">
+              <Link href="/about#story" className="hover:text-primary-400 transition">
                 {t("navStory")}
               </Link>
             </li>
@@ -150,12 +150,12 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/governance" className="hover:text-primary-400 transition">
+              <Link href="/about#governance" className="hover:text-primary-400 transition">
                 {t("navGovernance")}
               </Link>
             </li>
             <li>
-              <Link href="/partners" className="hover:text-primary-400 transition">
+              <Link href="/about#partners" className="hover:text-primary-400 transition">
                 {t("navPartners")}
               </Link>
             </li>
@@ -179,19 +179,19 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-slate-900 py-6 px-4 sm:px-8 text-center text-[11px] text-slate-500">
+      <div className="border-t border-white/10 bg-slate-950 py-6 px-4 sm:px-8 text-center text-[11px] text-slate-400">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>{t("allRightsReserved")}</p>
           <div className="flex items-center gap-4">
-            <Link href="/governance" className="hover:text-slate-400 transition">
+            <Link href="/about#governance" className="hover:text-primary-400 transition">
               {t("privacyPolicy")}
             </Link>
             <span>•</span>
-            <Link href="/governance" className="hover:text-slate-400 transition">
+            <Link href="/about#governance" className="hover:text-primary-400 transition">
               {t("termsConditions")}
             </Link>
             <span>•</span>
-            <Link href="/bank-accounts" className="hover:text-slate-400 transition">
+            <Link href="/bank-accounts" className="hover:text-primary-400 transition">
               {t("approvedDonationAccounts")}
             </Link>
           </div>
